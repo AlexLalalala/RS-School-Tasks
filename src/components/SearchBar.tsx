@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
-  initialQuery?: string
+  initialQuery?: string;
 }
 
 interface SearchBarState {

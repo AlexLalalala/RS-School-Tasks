@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import './App.css';
 import SearchBar from './components/SearchBar';
-import GameCard from './components/GameCard';
 import fetchGames from './api/cheapshark';
 import type { Deal } from './types/Deal';
 import DealsTable from './components/DealsTable';
@@ -10,7 +9,7 @@ interface AppState {
   deals: Deal[];
   loading: boolean;
   errorMessage: string | null;
-  lastSearchQuery: string
+  lastSearchQuery: string;
 }
 
 const gameCardTestProps = {
@@ -27,12 +26,12 @@ class App extends Component<object, AppState> {
     deals: [],
     loading: true,
     errorMessage: null,
-    lastSearchQuery: localStorage.getItem('lastSearchQuery') || ''
+    lastSearchQuery: localStorage.getItem('lastSearchQuery') || '',
   };
 
   handleSearch = async (query: string) => {
     this.setState({ loading: true, errorMessage: null });
-    localStorage.setItem('lastSearchQuery', query)
+    localStorage.setItem('lastSearchQuery', query);
     try {
       const deals = await fetchGames(query, 1);
       this.setState({ deals });
@@ -52,8 +51,11 @@ class App extends Component<object, AppState> {
     return (
       <>
         <h1>hi!</h1>
-        <SearchBar onSearch={this.handleSearch} initialQuery={this.state.lastSearchQuery}/>
-        {this.state.loading ? <p>Loading...</p> : <DealsTable deals={this.state.deals} />}
+        <SearchBar
+          onSearch={this.handleSearch}
+          initialQuery={this.state.lastSearchQuery}
+        />
+        <DealsTable deals={this.state.deals} loading={this.state.loading} />
       </>
     );
   };

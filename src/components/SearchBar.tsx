@@ -2,13 +2,14 @@ import { Component } from 'react';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
+  initialQuery?: string
 }
 
 interface SearchBarState {
   query: string;
 }
 class SearchBar extends Component<SearchBarProps, SearchBarState> {
-  state = { query: '' };
+  state = { query: this.props.initialQuery || '' };
 
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ query: e.target.value });
@@ -30,6 +31,7 @@ class SearchBar extends Component<SearchBarProps, SearchBarState> {
             aria-label="Search Query"
             aria-describedby="button-addon2"
             onChange={this.onChange}
+            value={this.state.query}
           />
           <button
             className="btn btn-outline-primary"

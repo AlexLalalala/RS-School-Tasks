@@ -12,15 +12,6 @@ interface AppState {
   lastSearchQuery: string;
 }
 
-const gameCardTestProps = {
-  title: "Deus Ex: Human Revolution - Director's Cut",
-  metacriticLink: '/game/pc/deus-ex-human-revolution---directors-cut',
-  salePrice: 2.99,
-  normalPrice: 19.99,
-  thumb:
-    'https://cdn.cloudflare.steamstatic.com/steam/apps/238010/capsule_sm_120.jpg?t=1619788192',
-};
-
 class App extends Component<object, AppState> {
   state = {
     deals: [],
@@ -36,7 +27,9 @@ class App extends Component<object, AppState> {
       const deals = await fetchGames(query, 1);
       this.setState({ deals });
     } catch (error) {
-      this.setState({ errorMessage: error instanceof Error ? error.message : 'Unknown error!' });
+      this.setState({
+        errorMessage: error instanceof Error ? error.message : 'Unknown error!',
+      });
     } finally {
       this.setState({ loading: false });
     }
@@ -55,18 +48,22 @@ class App extends Component<object, AppState> {
           onSearch={this.handleSearch}
           initialQuery={this.state.lastSearchQuery}
         />
-        {this.state.errorMessage ?
-          <div className="alert alert-danger d-flex align-items-center" role="alert">
-    <span>⚠️ {this.state.errorMessage}</span>
-    <button
-      className="btn btn-sm btn-outline-danger ms-auto"
-      onClick={() => this.handleSearch(this.state.lastSearchQuery)}
-    >
-      Try again
-    </button>
-  </div>: 
-        <DealsTable deals={this.state.deals} loading={this.state.loading} />
-        }
+        {this.state.errorMessage ? (
+          <div
+            className="alert alert-danger d-flex align-items-center"
+            role="alert"
+          >
+            <span>⚠️ {this.state.errorMessage}</span>
+            <button
+              className="btn btn-sm btn-outline-danger ms-auto"
+              onClick={() => this.handleSearch(this.state.lastSearchQuery)}
+            >
+              Try again
+            </button>
+          </div>
+        ) : (
+          <DealsTable deals={this.state.deals} loading={this.state.loading} />
+        )}
       </>
     );
   };

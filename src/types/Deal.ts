@@ -1,4 +1,5 @@
 export interface RawDeal {
+  steamId: string;
   title: string;
   normalPrice: string;
   salePrice: string;
@@ -7,6 +8,7 @@ export interface RawDeal {
 }
 
 export interface Deal {
+  steamId: string;
   title: string;
   normalPrice: number;
   salePrice: number;

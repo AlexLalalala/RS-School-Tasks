@@ -9,9 +9,7 @@ interface DealsTableProps {
   loading: boolean;
 }
 
-interface DealsTableState {}
-
-class DealsTable extends Component<DealsTableProps, DealsTableState> {
+class DealsTable extends Component<DealsTableProps, object> {
   state = {};
 
   render = () => {
@@ -22,18 +20,20 @@ class DealsTable extends Component<DealsTableProps, DealsTableState> {
     }
 
     return (
-      <div className="row row-cols-1 row-cols-md-3 g-4">
-        {loading
-          ? Array.from({ length: PAGE_SIZE }).map(() => (
-              <div className="col">
-                <SkeletonCard />
-              </div>
-            ))
-          : deals?.map((deal: Deal) => (
-              <div className="col">
-                <GameCard {...deal} />
-              </div>
-            ))}
+      <div className="container justify-content-center">
+        <div className="row row-cols-1 row-cols-md-3 g-4">
+          {loading
+            ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
+                <div className="col" key={`skeleton-card-${i}`}>
+                  <SkeletonCard />
+                </div>
+              ))
+            : deals?.map((deal: Deal) => (
+                <div className="col" key={`card-for-${deal.steamId}`}>
+                  <GameCard {...deal} />
+                </div>
+              ))}
+        </div>
       </div>
     );
   };

@@ -4,6 +4,7 @@ import SearchBar from './components/SearchBar';
 import GameCard from './components/GameCard';
 import fetchGames from './api/cheapshark';
 import type { Deal } from './types/Deal';
+import DealsTable from './components/DeaslTable';
 
 interface AppState {
   deals: Deal[];
@@ -49,7 +50,7 @@ class App extends Component<object, AppState> {
       <>
         <h1>hi!</h1>
         <SearchBar onSearch={this.handleSearch} />
-        {this.state.deals[0] && <GameCard {...this.state.deals[0]} />}
+        {this.state.loading ? <p>Loading...</p> : <DealsTable deals={this.state.deals} />}
       </>
     );
   };

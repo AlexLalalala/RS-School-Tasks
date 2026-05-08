@@ -13,7 +13,7 @@ class GameCard extends Component<GameCardProps, object> {
   render() {
     return (
       <>
-        <div className="card" style={{ width: '18rem' }}>
+        <div className="card h-100" style={{ width: '18rem' }}>
           <img
             src={this.props.thumb}
             className="card-img-top"

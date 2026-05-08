@@ -36,7 +36,7 @@ class App extends Component<object, AppState> {
       const deals = await fetchGames(query, 1);
       this.setState({ deals });
     } catch (error) {
-      this.setState({ errorMessage: 'Error!' });
+      this.setState({ errorMessage: error instanceof Error ? error.message : 'Unknown error!' });
     } finally {
       this.setState({ loading: false });
     }
@@ -50,12 +50,23 @@ class App extends Component<object, AppState> {
   render = () => {
     return (
       <>
-        <h1>hi!</h1>
+        <h1>Steam Deals Searcher</h1>
         <SearchBar
           onSearch={this.handleSearch}
           initialQuery={this.state.lastSearchQuery}
         />
+        {this.state.errorMessage ?
+          <div className="alert alert-danger d-flex align-items-center" role="alert">
+    <span>⚠️ {this.state.errorMessage}</span>
+    <button
+      className="btn btn-sm btn-outline-danger ms-auto"
+      onClick={() => this.handleSearch(this.state.lastSearchQuery)}
+    >
+      Try again
+    </button>
+  </div>: 
         <DealsTable deals={this.state.deals} loading={this.state.loading} />
+        }
       </>
     );
   };

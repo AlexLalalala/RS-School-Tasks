@@ -2,11 +2,13 @@ import { Component } from 'react';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import GameCard from './components/GameCard';
+import fetchGames from './api/cheapshark';
+import type { Deal } from './types/Deal';
 
 interface AppState {
-  results: [];
+  deals: Deal[];
   loading: boolean;
-  query: string;
+  errorMessage: string | null;
 }
 
 const gameCardTestProps = {
@@ -19,21 +21,38 @@ const gameCardTestProps = {
 };
 
 class App extends Component<object, AppState> {
-  constructor(props: object) {
-    super(props);
-  }
+  state = {
+    deals: [],
+    loading: true,
+    errorMessage: null,
+  };
 
-  render() {
+  handleSearch = async (query: string) => {
+    this.setState({ loading: true, errorMessage: null });
+    try {
+      const deals = await fetchGames(query, 1);
+      this.setState({ deals });
+    } catch (error) {
+      this.setState({ errorMessage: 'Error!' });
+    } finally {
+      this.setState({ loading: false });
+    }
+    console.log(this.state.deals);
+  };
+
+  componentDidMount = () => {
+    this.handleSearch('');
+  };
+
+  render = () => {
     return (
       <>
         <h1>hi!</h1>
-        <SearchBar
-          onSearch={(query: string) => console.log(`Searching for: ${query}`)}
-        />
-        <GameCard {...gameCardTestProps} />
+        <SearchBar onSearch={this.handleSearch} />
+        {this.state.deals[0] && <GameCard {...this.state.deals[0]} />}
       </>
     );
-  }
+  };
 }
 
 export default App;

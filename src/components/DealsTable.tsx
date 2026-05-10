@@ -3,6 +3,8 @@ import type { Deal } from '../types/Deal';
 import GameCard from './GameCard';
 import SkeletonCard from './SkeletonCard';
 import { PAGE_SIZE } from '../constant';
+import ErrorCard from './ErrorCard';
+import ErrorBoundary from './ErrorBoundary';
 
 interface DealsTableProps {
   deals: Deal[] | null;
@@ -29,9 +31,11 @@ class DealsTable extends Component<DealsTableProps, object> {
                 </div>
               ))
             : deals?.map((deal: Deal) => (
+              <ErrorBoundary fallback={<ErrorCard/>}>
                 <div className="col" key={`card-for-${deal.steamId}`}>
                   <GameCard {...deal} />
                 </div>
+                </ErrorBoundary>
               ))}
         </div>
       </div>

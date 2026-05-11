@@ -1,11 +1,17 @@
 import { CHEAPSHARK_BASE_URL, CHEAPSHARK_PATH, PAGE_SIZE } from '../constant';
 import type { Deal, RawDeal } from '../types/Deal';
 
-function toDeal(raw: RawDeal): Deal {
+function toDeal({
+  steamAppID,
+  salePrice,
+  normalPrice,
+  ...rest
+}: RawDeal): Deal {
   return {
-    ...raw,
-    normalPrice: parseFloat(raw.normalPrice),
-    salePrice: parseFloat(raw.salePrice),
+    ...rest,
+    normalPrice: parseFloat(normalPrice),
+    salePrice: parseFloat(salePrice),
+    steamId: steamAppID,
   };
 }
 
@@ -16,7 +22,7 @@ async function fetchGames(query: string, pageNumber: number): Promise<Deal[]> {
   }
   url.searchParams.set('pageSize', String(PAGE_SIZE));
   url.searchParams.set('pageNumber', String(pageNumber));
-  url.searchParams.set('storeId', '1');
+  url.searchParams.set('storeID', '1');
 
   const response = await fetch(url);
 

@@ -22,7 +22,7 @@ const mockResponse = (data: unknown, status = 200) => {
 };
 
 const createRawDeal = (overrides?: Partial<RawDeal>): RawDeal => ({
-  steamId: '1',
+  steamAppID: '1',
   title: 'Hades',
   normalPrice: '24.99',
   salePrice: '12.49',
@@ -64,7 +64,7 @@ describe('fetchGames', () => {
       await fetchGames('', 1);
 
       const calledURL = mockFetch.mock.calls[0][0] as URL;
-      expect(calledURL.searchParams.get('storeId')).toBe('1');
+      expect(calledURL.searchParams.get('storeID')).toBe('1');
     });
 
     it('includes title param when query is provided', async () => {

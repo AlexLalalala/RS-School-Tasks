@@ -1,5 +1,5 @@
 export interface RawDeal {
-  steamId: string;
+  steamAppID: string;
   title: string;
   normalPrice: string;
   salePrice: string;

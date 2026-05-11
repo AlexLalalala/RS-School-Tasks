@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import type { RawDeal } from '../types/Deal';
 import fetchGames from './cheapshark';
 import { CHEAPSHARK_BASE_URL, CHEAPSHARK_PATH, PAGE_SIZE } from '../constant';

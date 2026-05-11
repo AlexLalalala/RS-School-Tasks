@@ -15,10 +15,7 @@ class ErrorCard extends Component {
             <p className="card-text">
               <span className="fw-bold fs-5">Try again later</span>
             </p>
-            <a
-              href=""
-              className="btn btn-danger disabled"
-            >
+            <a href="" className="btn btn-danger disabled">
               Error
             </a>
           </div>

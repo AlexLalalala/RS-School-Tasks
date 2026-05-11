@@ -31,11 +31,11 @@ class DealsTable extends Component<DealsTableProps, object> {
                 </div>
               ))
             : deals?.map((deal: Deal) => (
-              <ErrorBoundary fallback={<ErrorCard/>}>
                 <div className="col" key={`card-for-${deal.steamId}`}>
-                  <GameCard {...deal} />
+                  <ErrorBoundary fallback={<ErrorCard />}>
+                    <GameCard {...deal} />
+                  </ErrorBoundary>
                 </div>
-                </ErrorBoundary>
               ))}
         </div>
       </div>

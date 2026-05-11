@@ -33,7 +33,6 @@ class App extends Component<object, AppState> {
     } finally {
       this.setState({ loading: false });
     }
-    console.log(this.state.deals);
   };
 
   componentDidMount = () => {

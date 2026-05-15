@@ -1,7 +1,4 @@
-import { Component } from 'react';
-
-class ErrorCard extends Component {
-  render() {
+function ErrorCard (){
     return (
       <>
         <div className="card h-100" style={{ width: '18rem' }}>
@@ -23,6 +20,5 @@ class ErrorCard extends Component {
       </>
     );
   }
-}
 
 export default ErrorCard;

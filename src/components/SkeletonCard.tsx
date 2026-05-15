@@ -21,7 +21,6 @@ function SkeletonCard() {
       </div>
     </div>
   );
-};
-
+}
 
 export default SkeletonCard;

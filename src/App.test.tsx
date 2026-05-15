@@ -65,7 +65,7 @@ describe('App', () => {
       render(<App />);
 
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
-      user.click(screen.getByTestId('search-button'));
+      await user.click(screen.getByTestId('search-button'));
 
       await waitFor(() => {
         expect(mockFetchGames).toHaveBeenCalledWith(SEARCH_BAR_RETURN, 1);
@@ -76,12 +76,12 @@ describe('App', () => {
       render(<App />);
 
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
-      user.click(screen.getByTestId('search-button'));
+      await user.click(screen.getByTestId('search-button'));
 
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(2));
 
       expect(localStorage.getItem('lastSearchQuery')).toBe(SEARCH_BAR_RETURN);
-    });
+    });})
     describe('error state', () => {
       it('shows error alert when fetch fails', async () => {
         mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
@@ -109,7 +109,6 @@ describe('App', () => {
         await waitFor(() => {
           expect(screen.queryByRole('alert')).not.toBeInTheDocument();
         });
-      });
     });
   });
 });

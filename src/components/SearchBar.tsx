@@ -5,8 +5,6 @@ interface SearchBarProps {
   initialQuery?: string;
 }
 
-
-
 function SearchBar ({onSearch, initialQuery}: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery || '');
 

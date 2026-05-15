@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import type { Deal } from '../types/Deal';
 import GameCard from './GameCard';
 import SkeletonCard from './SkeletonCard';
@@ -11,7 +10,7 @@ interface DealsTableProps {
   loading: boolean;
 }
 
-function DealsTable ({deals, loading}:DealsTableProps){
+function DealsTable({ deals, loading }: DealsTableProps) {
   if (!loading && deals?.length === 0) {
     return <p>No deals found.</p>;
   }
@@ -35,7 +34,6 @@ function DealsTable ({deals, loading}:DealsTableProps){
       </div>
     </div>
   );
-};
-
+}
 
 export default DealsTable;

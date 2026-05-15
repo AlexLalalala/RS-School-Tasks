@@ -8,7 +8,13 @@ interface GameCardProps {
   metacriticLink: string;
 }
 
-function GameCard({title, normalPrice, salePrice, thumb, metacriticLink}:GameCardProps){
+function GameCard({
+  title,
+  normalPrice,
+  salePrice,
+  thumb,
+  metacriticLink,
+}: GameCardProps) {
   return (
     <>
       <div className="card h-100" style={{ width: '18rem' }}>
@@ -36,6 +42,5 @@ function GameCard({title, normalPrice, salePrice, thumb, metacriticLink}:GameCar
     </>
   );
 }
-
 
 export default GameCard;

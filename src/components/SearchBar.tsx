@@ -5,7 +5,7 @@ interface SearchBarProps {
   initialQuery?: string;
 }
 
-function SearchBar ({onSearch, initialQuery}: SearchBarProps) {
+function SearchBar({ onSearch, initialQuery }: SearchBarProps) {
   const [query, setQuery] = useState(initialQuery || '');
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +40,5 @@ function SearchBar ({onSearch, initialQuery}: SearchBarProps) {
     </form>
   );
 }
-
 
 export default SearchBar;

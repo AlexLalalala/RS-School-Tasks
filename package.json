@@ -14,12 +14,14 @@
     "preview": "vite preview",
     "prepare": "husky",
     "format:fix": "prettier --write .",
+    "format:check": "prettier -c .",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "react-router": "^7.15.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

@@ -1,13 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import fetchGames from './api/cheapshark';
-import type { Deal } from './types/Deal';
-import App from './App';
+import fetchGames from '../api/cheapshark';
+import type { Deal } from '../types/Deal';
 import userEvent from '@testing-library/user-event';
+import HomePage from './HomePage';
 
-vi.mock('./api/cheapshark');
+vi.mock('../api/cheapshark');
 
 const SEARCH_BAR_RETURN = 'Fear and Hunger';
-vi.mock('./components/SearchBar', () => ({
+vi.mock('../components/SearchBar', () => ({
   default: ({
     onSearch,
     initialQuery,
@@ -25,7 +25,7 @@ vi.mock('./components/SearchBar', () => ({
   ),
 }));
 
-vi.mock('./component/DealsTable', () => ({
+vi.mock('../component/DealsTable', () => ({
   default: ({ deals, loading }: { deals: Deal[]; loading: boolean }) => (
     <div data-testid="deals-table">
       {loading && <span data-testid="loading-indicator">Loading...</span>}
@@ -45,16 +45,16 @@ beforeEach(() => {
   mockFetchGames.mockClear();
 });
 
-describe('App', () => {
+describe('HomePage', () => {
   describe('on mount', () => {
     it('fetches deals with empty query when localStorage is empty', () => {
-      render(<App />);
+      render(<HomePage />);
 
       expect(mockFetchGames).toHaveBeenCalledExactlyOnceWith('', 1);
     });
     it('fetches deals with lastSearchQuery from localStorage', () => {
       localStorage.setItem('lastSearchQuery', 'Hades II');
-      render(<App />);
+      render(<HomePage />);
 
       expect(mockFetchGames).toHaveBeenCalledExactlyOnceWith('Hades II', 1);
     });
@@ -62,7 +62,7 @@ describe('App', () => {
   describe('on search', () => {
     it('fetches deals after submit in SearchBar', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(<HomePage />);
 
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
       await user.click(screen.getByTestId('search-button'));
@@ -73,7 +73,7 @@ describe('App', () => {
     });
     it('saves the query into local storage', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      render(<HomePage />);
 
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
       await user.click(screen.getByTestId('search-button'));
@@ -81,34 +81,35 @@ describe('App', () => {
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(2));
 
       expect(localStorage.getItem('lastSearchQuery')).toBe(SEARCH_BAR_RETURN);
-    });})
-    describe('error state', () => {
-      it('shows error alert when fetch fails', async () => {
-        mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
-        render(<App />);
+    });
+  });
+  describe('error state', () => {
+    it('shows error alert when fetch fails', async () => {
+      mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
+      render(<HomePage />);
 
-        await waitFor(() => {
-          expect(screen.getByRole('alert')).toBeInTheDocument();
-        });
+      await waitFor(() => {
+        expect(screen.getByRole('alert')).toBeInTheDocument();
       });
-      it('shows error text when fetch fails', async () => {
-        mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
-        render(<App />);
+    });
+    it('shows error text when fetch fails', async () => {
+      mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
+      render(<HomePage />);
 
-        await waitFor(() => {
-          expect(screen.getByText(/Internal error/)).toBeInTheDocument();
-        });
+      await waitFor(() => {
+        expect(screen.getByText(/Internal error/)).toBeInTheDocument();
       });
-      it('hides error message after successful retry', async () => {
-        const user = userEvent.setup();
-        mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
-        render(<App />);
+    });
+    it('hides error message after successful retry', async () => {
+      const user = userEvent.setup();
+      mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
+      render(<HomePage />);
 
-        user.click(screen.getByTestId('search-button'));
+      user.click(screen.getByTestId('search-button'));
 
-        await waitFor(() => {
-          expect(screen.queryByRole('alert')).not.toBeInTheDocument();
-        });
+      await waitFor(() => {
+        expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+      });
     });
   });
 });

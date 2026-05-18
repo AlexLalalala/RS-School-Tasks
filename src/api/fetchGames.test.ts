@@ -1,6 +1,11 @@
 import type { RawDeal } from '../types/Deal';
-import fetchGames from './cheapshark';
-import { CHEAPSHARK_BASE_URL, CHEAPSHARK_PATH, PAGE_SIZE } from '../constant';
+import fetchGames from './fetchGames';
+import {
+  CHEAPSHARK_BASE_URL,
+  CHEAPSHARK_PATH,
+  LAST_PAGE_NUMBER_HEADER,
+  PAGE_SIZE,
+} from '../constant';
 
 const mockFetch = vi.fn();
 
@@ -13,15 +18,20 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+const headers = new Headers();
+headers.set(LAST_PAGE_NUMBER_HEADER, '10');
+
 const mockResponse = (data: unknown, status = 200) => {
   mockFetch.mockResolvedValueOnce({
     ok: status >= 200 && status < 300,
     status,
     json: () => Promise.resolve(data),
+    headers,
   });
 };
 
 const createRawDeal = (overrides?: Partial<RawDeal>): RawDeal => ({
+  dealID: '111a111',
   steamAppID: '1',
   title: 'Hades',
   normalPrice: '24.99',
@@ -51,12 +61,12 @@ describe('fetchGames', () => {
       expect(calledURL.searchParams.get('pageSize')).toBe(String(PAGE_SIZE));
     });
 
-    it('includes pageNumber in the URL', async () => {
+    it('includes pageNumber in the URL (one less than argument)', async () => {
       mockResponse([]);
       await fetchGames('', 2);
 
       const calledURL = mockFetch.mock.calls[0][0] as URL;
-      expect(calledURL.searchParams.get('pageNumber')).toBe('2');
+      expect(calledURL.searchParams.get('pageNumber')).toBe('1');
     });
 
     it('includes storeId in the URL', async () => {
@@ -86,16 +96,17 @@ describe('fetchGames', () => {
   describe('happy path', () => {
     it('returns an empty array when no deals are found', async () => {
       mockResponse([]);
-      const deals = await fetchGames('', 1);
+      const { deals } = await fetchGames('', 1);
 
       expect(deals).toEqual([]);
     });
 
     it('returns transformed deals on success', async () => {
       mockResponse([createRawDeal()]);
-      const deals = await fetchGames('', 1);
+      const { deals } = await fetchGames('', 1);
 
       expect(deals[0]).toEqual({
+        dealId: '111a111',
         steamId: '1',
         title: 'Hades',
         normalPrice: 24.99,

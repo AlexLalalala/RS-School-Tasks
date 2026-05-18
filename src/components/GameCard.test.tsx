@@ -1,4 +1,4 @@
-import { METACRITIC_HOST_URL } from '../constant';
+import { MemoryRouter } from 'react-router';
 import GameCard from './GameCard';
 import { render, screen } from '@testing-library/react';
 
@@ -9,11 +9,30 @@ const mockProps = {
   thumb:
     'https://sttc.gamersgate.com/images/product/ni-no-kunitm-ii-revenant-kingdom-the-princes-edition/cover-180-b6d878.jpg',
   metacriticLink: 'null',
+  dealId: '111a111',
+};
+
+const renderGameCard = (
+  props: {
+    title: string;
+    normalPrice: number;
+    salePrice: number;
+    thumb: string;
+    metacriticLink: string;
+    dealId: string;
+  },
+  path = '/'
+) => {
+  render(
+    <MemoryRouter initialEntries={[path]}>
+      <GameCard {...props} />
+    </MemoryRouter>
+  );
 };
 
 describe('GameCard', () => {
   it('GameCard should render title', () => {
-    render(<GameCard {...mockProps} />);
+    renderGameCard(mockProps);
 
     expect(
       screen.getByText("Ni no Kuni II: Revenant Kingdom - The Prince's Edition")
@@ -21,19 +40,19 @@ describe('GameCard', () => {
   });
 
   it('GameCard should render normal price', () => {
-    render(<GameCard {...mockProps} />);
+    renderGameCard(mockProps);
 
     expect(screen.getByText('79.99')).toBeInTheDocument();
   });
 
   it('GameCard should render sale price', () => {
-    render(<GameCard {...mockProps} />);
+    renderGameCard(mockProps);
 
     expect(screen.getByText('11.99')).toBeInTheDocument();
   });
 
   it('GameCard should render image with proper alt text', () => {
-    render(<GameCard {...mockProps} />);
+    renderGameCard(mockProps);
 
     const image = screen.getByRole('img');
     expect(image).toHaveAttribute(
@@ -43,12 +62,12 @@ describe('GameCard', () => {
     expect(image.getAttribute('alt')).toMatch(/Ni no Kuni II/);
   });
 
-  it('GameCard should render a link to metacritic site', () => {
-    render(<GameCard {...mockProps} />);
+  it('GameCard should render a link to the DealPanel', () => {
+    renderGameCard(mockProps);
 
     expect(screen.getByRole('link')).toHaveAttribute(
       'href',
-      new URL('null', METACRITIC_HOST_URL).href
+      `/${mockProps.dealId}`
     );
   });
 });

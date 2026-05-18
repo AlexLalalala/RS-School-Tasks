@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/RS-School-Tasks',
   plugins: [react()],
   test: {
     environment: 'jsdom',
@@ -25,6 +26,8 @@ export default defineConfig({
         'src/index.{js,jsx,ts,tsx}',
         'src/setupTests.{js,ts}',
         'src/**/*.d.ts',
+        'src/main.tsx',
+        'src/App.tsx',
       ],
     },
   },

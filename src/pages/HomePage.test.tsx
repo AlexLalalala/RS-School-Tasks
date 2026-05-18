@@ -4,8 +4,18 @@ import type { Deal } from '../types/Deal';
 import userEvent from '@testing-library/user-event';
 import HomePage from './HomePage';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { createMockDeal } from '../__tests__/factories';
+import Paginator from '../components/Paginator';
 
 vi.mock('../api/cheapshark');
+const mockFetchGames = vi.mocked(fetchGames);
+const mockedDeals = {
+  deals: [
+    createMockDeal({ steamId: '1', title: 'Hades II' }),
+    createMockDeal({ steamId: '2', title: 'Shovel Knight' }),
+  ],
+  lastPageNumber: 10,
+};
 
 const SEARCH_BAR_RETURN = 'Fear and Hunger';
 vi.mock('../components/SearchBar', () => ({
@@ -26,7 +36,7 @@ vi.mock('../components/SearchBar', () => ({
   ),
 }));
 
-vi.mock('../component/DealsTable', () => ({
+vi.mock('../components/DealsTable', () => ({
   default: ({ deals, loading }: { deals: Deal[]; loading: boolean }) => (
     <div data-testid="deals-table">
       {loading && <span data-testid="loading-indicator">Loading...</span>}
@@ -39,11 +49,32 @@ vi.mock('../component/DealsTable', () => ({
   ),
 }));
 
-const mockFetchGames = vi.mocked(fetchGames);
+vi.mock('../components/Paginator', () => ({
+  default: vi.fn(
+    ({
+      currentPage,
+      lastPageNumber,
+      basePath,
+    }: {
+      currentPage: number;
+      lastPageNumber: number;
+      basePath: string;
+    }) => (
+      <div data-testid="paginator">
+        <span data-testid="current-page">{currentPage}</span>
+        <span data-testid="last-page">{lastPageNumber}</span>
+        <span data-testid="base-path">{basePath}</span>
+      </div>
+    )
+  ),
+}));
+const mockedPaginator = vi.mocked(Paginator);
 
 beforeEach(() => {
   localStorage.clear();
   mockFetchGames.mockClear();
+  mockFetchGames.mockResolvedValue(mockedDeals);
+  mockedPaginator.mockClear();
 });
 
 const renderHomePage = (path = '/') => {
@@ -58,6 +89,15 @@ const renderHomePage = (path = '/') => {
 };
 
 describe('HomePage', () => {
+  describe('renders', () => {
+    it('title', () => {
+      renderHomePage();
+
+      expect(
+        screen.getByRole('heading', { name: /steam/i })
+      ).toBeInTheDocument();
+    });
+  });
   describe('on mount', () => {
     it('fetches deals with empty query when localStorage is empty', () => {
       renderHomePage();
@@ -122,6 +162,46 @@ describe('HomePage', () => {
       await waitFor(() => {
         expect(screen.queryByRole('alert')).not.toBeInTheDocument();
       });
+    });
+  });
+  describe('on successful search', () => {
+    it('renders Paginator', async () => {
+      renderHomePage();
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId('paginator')[0]).toBeInTheDocument();
+      });
+    });
+    it('renders DealsTable', async () => {
+      renderHomePage();
+
+      await waitFor(() => {
+        expect(screen.getByTestId('deals-table')).toBeInTheDocument();
+      });
+    });
+    it('while on "/" path calls Paginator with correct arguments', async () => {
+      renderHomePage();
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId('deal-card')[0]).toBeInTheDocument();
+      });
+
+      expect(mockedPaginator).toHaveBeenCalledWith(
+        expect.objectContaining({ currentPage: 1 }),
+        undefined
+      );
+    });
+    it('while on "/page/:pageNumber" path calls Paginator with correct arguments', async () => {
+      renderHomePage('/page/4');
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId('deal-card')[0]).toBeInTheDocument();
+      });
+
+      expect(mockedPaginator).toHaveBeenCalledWith(
+        expect.objectContaining({ currentPage: 4 }),
+        undefined
+      );
     });
   });
 });

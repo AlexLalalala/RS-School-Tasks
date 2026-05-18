@@ -3,6 +3,7 @@ import fetchGames from '../api/cheapshark';
 import type { Deal } from '../types/Deal';
 import userEvent from '@testing-library/user-event';
 import HomePage from './HomePage';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 vi.mock('../api/cheapshark');
 
@@ -45,16 +46,27 @@ beforeEach(() => {
   mockFetchGames.mockClear();
 });
 
+const renderHomePage = (path = '/') => {
+  render(
+    <MemoryRouter initialEntries={[path]}>
+      <Routes>
+        <Route path="/page/:pageNumber" element={<HomePage />} />
+        <Route index element={<HomePage />} />
+      </Routes>
+    </MemoryRouter>
+  );
+};
+
 describe('HomePage', () => {
   describe('on mount', () => {
     it('fetches deals with empty query when localStorage is empty', () => {
-      render(<HomePage />);
+      renderHomePage();
 
       expect(mockFetchGames).toHaveBeenCalledExactlyOnceWith('', 1);
     });
     it('fetches deals with lastSearchQuery from localStorage', () => {
       localStorage.setItem('lastSearchQuery', 'Hades II');
-      render(<HomePage />);
+      renderHomePage();
 
       expect(mockFetchGames).toHaveBeenCalledExactlyOnceWith('Hades II', 1);
     });
@@ -62,7 +74,7 @@ describe('HomePage', () => {
   describe('on search', () => {
     it('fetches deals after submit in SearchBar', async () => {
       const user = userEvent.setup();
-      render(<HomePage />);
+      renderHomePage();
 
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
       await user.click(screen.getByTestId('search-button'));
@@ -73,7 +85,7 @@ describe('HomePage', () => {
     });
     it('saves the query into local storage', async () => {
       const user = userEvent.setup();
-      render(<HomePage />);
+      renderHomePage();
 
       await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
       await user.click(screen.getByTestId('search-button'));
@@ -86,7 +98,7 @@ describe('HomePage', () => {
   describe('error state', () => {
     it('shows error alert when fetch fails', async () => {
       mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
-      render(<HomePage />);
+      renderHomePage();
 
       await waitFor(() => {
         expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -94,7 +106,7 @@ describe('HomePage', () => {
     });
     it('shows error text when fetch fails', async () => {
       mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
-      render(<HomePage />);
+      renderHomePage();
 
       await waitFor(() => {
         expect(screen.getByText(/Internal error/)).toBeInTheDocument();
@@ -103,7 +115,7 @@ describe('HomePage', () => {
     it('hides error message after successful retry', async () => {
       const user = userEvent.setup();
       mockFetchGames.mockRejectedValueOnce(new Error('Internal error'));
-      render(<HomePage />);
+      renderHomePage();
 
       user.click(screen.getByTestId('search-button'));
 

@@ -18,7 +18,7 @@ const toDetailedDeal = ({
     metacriticScore: parseInt(metacriticScore),
     cheapestPrice: {
       price: parseFloat(cheapestPrice.price),
-      date: new Date(cheapestPrice.date),
+      date: new Date(Number(cheapestPrice.date) * 1000),
     },
     steamRatingText,
     title: name,

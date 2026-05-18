@@ -31,6 +31,7 @@ const mockResponse = (data: unknown, status = 200) => {
 };
 
 const createRawDeal = (overrides?: Partial<RawDeal>): RawDeal => ({
+  dealID: '111a111',
   steamAppID: '1',
   title: 'Hades',
   normalPrice: '24.99',
@@ -105,6 +106,7 @@ describe('fetchGames', () => {
       const { deals } = await fetchGames('', 1);
 
       expect(deals[0]).toEqual({
+        dealId: '111a111',
         steamId: '1',
         title: 'Hades',
         normalPrice: 24.99,

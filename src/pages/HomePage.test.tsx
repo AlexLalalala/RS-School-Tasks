@@ -6,6 +6,7 @@ import HomePage from './HomePage';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { createMockDeal } from '../__tests__/factories';
 import Paginator from '../components/Paginator';
+import DealPanel from '../components/DealPanel';
 
 vi.mock('../api/fetchGames');
 const mockFetchGames = vi.mocked(fetchGames);
@@ -70,6 +71,10 @@ vi.mock('../components/Paginator', () => ({
 }));
 const mockedPaginator = vi.mocked(Paginator);
 
+vi.mock('../components/DealPanel', () => ({
+  default: () => <div data-testid="deal-panel">Deal Panel</div>,
+}));
+
 beforeEach(() => {
   localStorage.clear();
   mockFetchGames.mockClear();
@@ -77,12 +82,16 @@ beforeEach(() => {
   mockedPaginator.mockClear();
 });
 
-const renderHomePage = (path = '/') => {
-  render(
-    <MemoryRouter initialEntries={[path]}>
+const renderHomePage = (initialPath = '/') => {
+  return render(
+    <MemoryRouter initialEntries={[initialPath]}>
       <Routes>
-        <Route path="/page/:pageNumber" element={<HomePage />} />
-        <Route index element={<HomePage />} />
+        <Route element={<HomePage />}>
+          <Route index element={null} />
+          <Route path="/:dealId" element={<DealPanel />} />
+          <Route path="page/:pageNumber" element={null} />
+          <Route path="page/:pageNumber/:dealId" element={<DealPanel />} />
+        </Route>
       </Routes>
     </MemoryRouter>
   );
@@ -177,6 +186,13 @@ describe('HomePage', () => {
 
       await waitFor(() => {
         expect(screen.getByTestId('deals-table')).toBeInTheDocument();
+      });
+    });
+    it('renders DealPanel', async () => {
+      renderHomePage('/page/1/111a111');
+
+      await waitFor(() => {
+        expect(screen.getByTestId('deal-panel')).toBeInTheDocument();
       });
     });
     it('while on "/" path calls Paginator with correct arguments', async () => {

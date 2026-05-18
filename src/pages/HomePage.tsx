@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import type { Deal } from '../types/Deal';
-import fetchGames from '../api/cheapshark';
+import fetchGames from '../api/fetchGames';
 import SearchBar from '../components/SearchBar';
 import DealsTable from '../components/DealsTable';
 import Paginator from '../components/Paginator';
-import { useParams } from 'react-router';
+import { Outlet, useParams } from 'react-router';
 
 function HomePage() {
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -15,6 +15,8 @@ function HomePage() {
   );
   const [lastPageNumber, setLastPageNumber] = useState(1);
   const currentPage = Number(useParams().pageNumber) || 1;
+  const dealId = useParams().dealId;
+  const isPanelOpen = !!dealId;
 
   useEffect(() => {
     const loadDeals = async () => {
@@ -45,36 +47,52 @@ function HomePage() {
 
   return (
     <>
-      <h1>Steam Deals Searcher</h1>
-      <SearchBar onSearch={handleSearch} initialQuery={query} />
-      {errorMessage ? (
-        <div
-          className="alert alert-danger d-flex align-items-center"
-          role="alert"
-        >
-          <span>⚠️ {errorMessage}</span>
-          <button
-            className="btn btn-sm btn-outline-danger ms-auto"
-            onClick={() => handleSearch(query)}
+      <div className="d-flex gap-3">
+        <section className="flex-grow-1 min-width-0">
+          <h1>Steam Deals Searcher</h1>
+          <SearchBar onSearch={handleSearch} initialQuery={query} />
+          {errorMessage ? (
+            <div
+              className="alert alert-danger d-flex align-items-center"
+              role="alert"
+            >
+              <span>⚠️ {errorMessage}</span>
+              <button
+                className="btn btn-sm btn-outline-danger ms-auto"
+                onClick={() => handleSearch(query)}
+              >
+                Try again
+              </button>
+            </div>
+          ) : (
+            <>
+              <Paginator
+                currentPage={currentPage}
+                lastPageNumber={lastPageNumber}
+                basePath=""
+              />
+              <DealsTable deals={deals} loading={loading} />
+              <Paginator
+                currentPage={currentPage}
+                lastPageNumber={lastPageNumber}
+                basePath=""
+              />
+            </>
+          )}
+        </section>
+        {isPanelOpen && (
+          <section
+            style={{
+              flex: '0 0 25%',
+              position: 'sticky',
+              top: '0',
+              height: '100vh',
+            }}
           >
-            Try again
-          </button>
-        </div>
-      ) : (
-        <>
-          <Paginator
-            currentPage={currentPage}
-            lastPageNumber={lastPageNumber}
-            basePath=""
-          />
-          <DealsTable deals={deals} loading={loading} />
-          <Paginator
-            currentPage={currentPage}
-            lastPageNumber={lastPageNumber}
-            basePath=""
-          />
-        </>
-      )}
+            <Outlet />
+          </section>
+        )}
+      </div>
     </>
   );
 }

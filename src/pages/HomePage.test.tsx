@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import fetchGames from '../api/cheapshark';
+import fetchGames from '../api/fetchGames';
 import type { Deal } from '../types/Deal';
 import userEvent from '@testing-library/user-event';
 import HomePage from './HomePage';
@@ -7,7 +7,7 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 import { createMockDeal } from '../__tests__/factories';
 import Paginator from '../components/Paginator';
 
-vi.mock('../api/cheapshark');
+vi.mock('../api/fetchGames');
 const mockFetchGames = vi.mocked(fetchGames);
 const mockedDeals = {
   deals: [

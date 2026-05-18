@@ -11,7 +11,8 @@ interface fetchGamesResult {
   lastPageNumber: number;
 }
 
-function toDeal({
+export function toDeal({
+  dealID,
   steamAppID,
   salePrice,
   normalPrice,
@@ -19,6 +20,7 @@ function toDeal({
 }: RawDeal): Deal {
   return {
     ...rest,
+    dealId: dealID,
     normalPrice: parseFloat(normalPrice),
     salePrice: parseFloat(salePrice),
     steamId: steamAppID,

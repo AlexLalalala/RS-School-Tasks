@@ -1,4 +1,4 @@
-import { buildMetacriticURL } from '../utils';
+import { Link } from 'react-router';
 
 interface GameCardProps {
   title: string;
@@ -6,6 +6,7 @@ interface GameCardProps {
   salePrice: number;
   thumb: string;
   metacriticLink: string;
+  dealId: string;
 }
 
 function GameCard({
@@ -13,8 +14,9 @@ function GameCard({
   normalPrice,
   salePrice,
   thumb,
-  metacriticLink,
+  dealId,
 }: GameCardProps) {
+  console.log(`${title}: ${dealId}`);
   return (
     <>
       <div className="card h-100" style={{ width: '18rem' }}>
@@ -31,12 +33,9 @@ function GameCard({
             </span>{' '}
             <span className="fw-bold fs-5">{salePrice}</span>
           </p>
-          <a
-            href={buildMetacriticURL(metacriticLink)}
-            className="btn btn-primary"
-          >
-            See Reviews
-          </a>
+          <Link to={dealId} className="btn btn-outline-primary">
+            See Details
+          </Link>
         </div>
       </div>
     </>

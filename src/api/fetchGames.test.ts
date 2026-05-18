@@ -1,5 +1,5 @@
 import type { RawDeal } from '../types/Deal';
-import fetchGames from './cheapshark';
+import fetchGames from './fetchGames';
 import {
   CHEAPSHARK_BASE_URL,
   CHEAPSHARK_PATH,

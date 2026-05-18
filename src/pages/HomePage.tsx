@@ -3,6 +3,8 @@ import type { Deal } from '../types/Deal';
 import fetchGames from '../api/cheapshark';
 import SearchBar from '../components/SearchBar';
 import DealsTable from '../components/DealsTable';
+import Paginator from '../components/Paginator';
+import { useParams } from 'react-router';
 
 function HomePage() {
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -11,6 +13,8 @@ function HomePage() {
   const [query, setQuery] = useState(
     localStorage.getItem('lastSearchQuery') || ''
   );
+  const [lastPageNumber, setLastPageNumber] = useState(1);
+  const currentPage = Number(useParams().pageNumber) || 1;
 
   useEffect(() => {
     const loadDeals = async () => {
@@ -18,8 +22,10 @@ function HomePage() {
       setErrorMessage(null);
       localStorage.setItem('lastSearchQuery', query);
       try {
-        const deals = await fetchGames(query, 1);
-        setDeals(deals);
+        const { deals: fetchedDeals, lastPageNumber: fetchedLastPage } =
+          await fetchGames(query, currentPage);
+        setDeals(fetchedDeals);
+        setLastPageNumber(fetchedLastPage);
       } catch (error) {
         setErrorMessage(
           error instanceof Error ? error.message : 'Unknown error!'
@@ -30,7 +36,7 @@ function HomePage() {
     };
 
     loadDeals();
-  }, [query]);
+  }, [query, currentPage]);
 
   const handleSearch = (query: string) => {
     localStorage.setItem('lastSearchQuery', query);
@@ -55,7 +61,19 @@ function HomePage() {
           </button>
         </div>
       ) : (
-        <DealsTable deals={deals} loading={loading} />
+        <>
+          <Paginator
+            currentPage={currentPage}
+            lastPageNumber={lastPageNumber}
+            basePath=""
+          />
+          <DealsTable deals={deals} loading={loading} />
+          <Paginator
+            currentPage={currentPage}
+            lastPageNumber={lastPageNumber}
+            basePath=""
+          />
+        </>
       )}
     </>
   );

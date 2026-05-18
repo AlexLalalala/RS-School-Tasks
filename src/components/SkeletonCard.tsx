@@ -2,7 +2,7 @@ function SkeletonCard() {
   return (
     <div className="card h-100" style={{ width: '18rem' }}>
       <img
-        src="https://placehold.co/400x600?text=Loading..."
+        src="https://placehold.co/320x120?text=Loading..."
         className="card-img-top"
         alt="Placeholder image"
       />

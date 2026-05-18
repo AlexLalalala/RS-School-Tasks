@@ -1,5 +1,15 @@
-import { CHEAPSHARK_BASE_URL, CHEAPSHARK_PATH, PAGE_SIZE } from '../constant';
+import {
+  CHEAPSHARK_BASE_URL,
+  CHEAPSHARK_PATH,
+  LAST_PAGE_NUMBER_HEADER,
+  PAGE_SIZE,
+} from '../constant';
 import type { Deal, RawDeal } from '../types/Deal';
+
+interface fetchGamesResult {
+  deals: Deal[];
+  lastPageNumber: number;
+}
 
 function toDeal({
   steamAppID,
@@ -15,13 +25,24 @@ function toDeal({
   };
 }
 
-async function fetchGames(query: string, pageNumber: number): Promise<Deal[]> {
+function getLastPageNumber(response: Response) {
+  const lastPage = response.headers.get(LAST_PAGE_NUMBER_HEADER);
+  if (!lastPage) {
+    throw new Error('Can not find lastPageNumber in the response');
+  }
+  return Number(lastPage);
+}
+
+async function fetchGames(
+  query: string,
+  pageNumber: number
+): Promise<fetchGamesResult> {
   const url = new URL(CHEAPSHARK_PATH, CHEAPSHARK_BASE_URL);
   if (query) {
     url.searchParams.set('title', query);
   }
   url.searchParams.set('pageSize', String(PAGE_SIZE));
-  url.searchParams.set('pageNumber', String(pageNumber));
+  url.searchParams.set('pageNumber', String(pageNumber - 1));
   url.searchParams.set('storeID', '1');
 
   const response = await fetch(url);
@@ -33,9 +54,11 @@ async function fetchGames(query: string, pageNumber: number): Promise<Deal[]> {
   if (!response.ok)
     throw new Error(`Something went wrong (${response.status}).`);
 
-  return (await response.json())
+  const lastPageNumber = getLastPageNumber(response);
+  const deals = (await response.json())
     .map((raw: unknown) => raw as RawDeal)
     .map(toDeal);
+  return { deals, lastPageNumber };
 }
 
 export default fetchGames;

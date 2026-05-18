@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'react';
-import NavigationBar from './Navigation';
+import NavigationBar from './NavigationBar';
 import { Outlet } from 'react-router';
 
 const Layout: FunctionComponent = () => {

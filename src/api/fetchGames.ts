@@ -56,7 +56,7 @@ async function fetchGames(
   if (!response.ok)
     throw new Error(`Something went wrong (${response.status}).`);
 
-  const lastPageNumber = getLastPageNumber(response);
+  const lastPageNumber = getLastPageNumber(response) + 1;
   const deals = (await response.json())
     .map((raw: unknown) => raw as RawDeal)
     .map(toDeal);

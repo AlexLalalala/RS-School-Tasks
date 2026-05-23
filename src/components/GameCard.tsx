@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 
 interface GameCardProps {
   title: string;
@@ -16,7 +16,9 @@ function GameCard({
   thumb,
   dealId,
 }: GameCardProps) {
-  console.log(`${title}: ${dealId}`);
+  const { pageNumber } = useParams();
+  const currentPage = Number(pageNumber) || 1;
+
   return (
     <>
       <div className="card h-100" style={{ width: '18rem' }}>
@@ -24,6 +26,7 @@ function GameCard({
           src={thumb}
           className="card-img-top"
           alt={`Thumbnail of ${title}`}
+          loading="lazy"
         />
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
@@ -33,7 +36,10 @@ function GameCard({
             </span>{' '}
             <span className="fw-bold fs-5">{salePrice}</span>
           </p>
-          <Link to={dealId} className="btn btn-outline-primary">
+          <Link
+            to={`/page/${currentPage}/${dealId}`}
+            className="btn btn-outline-primary"
+          >
             See Details
           </Link>
         </div>

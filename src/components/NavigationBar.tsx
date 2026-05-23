@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { NavLink, type NavLinkRenderProps } from 'react-router';
+import ErrorButton from './ErrorButton';
 
 const NavigationBar: FunctionComponent = () => {
   const navLinkClass = ({ isActive }: NavLinkRenderProps) =>
@@ -18,6 +19,9 @@ const NavigationBar: FunctionComponent = () => {
           </NavLink>
         </li>
       </ul>
+      <div className="ms-auto">
+        <ErrorButton />
+      </div>
     </nav>
   );
 };

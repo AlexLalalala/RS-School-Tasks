@@ -5,12 +5,18 @@ interface PaginatorProps {
   currentPage: number;
   lastPageNumber: number;
   basePath: string;
+  loading?: boolean;
 }
 
 const navLinkClass = (currentPage: number, n: number) =>
   `page-item ${currentPage === n ? 'active' : ''}`;
 
-function Paginator({ currentPage, lastPageNumber, basePath }: PaginatorProps) {
+function Paginator({
+  currentPage,
+  lastPageNumber,
+  basePath,
+  loading = false,
+}: PaginatorProps) {
   const urlFactory = (n: number) => {
     return `${basePath}/page/${n}`;
   };
@@ -25,7 +31,7 @@ function Paginator({ currentPage, lastPageNumber, basePath }: PaginatorProps) {
     return Array.from({ length: end_n - st_n + 1 }, (_, i) => st_n + i);
   }
   return (
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation" className={loading ? 'invisible' : ''}>
       <ul className="pagination justify-content-center">
         <li className="page-item">
           <Link className="page-link" to={urlFactory(1)} aria-label="Previous">

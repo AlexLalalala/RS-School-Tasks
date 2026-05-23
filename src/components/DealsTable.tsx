@@ -6,7 +6,7 @@ import ErrorCard from './ErrorCard';
 import ErrorBoundary from './ErrorBoundary';
 
 interface DealsTableProps {
-  deals: Deal[] | null;
+  deals: Deal[];
   loading: boolean;
 }
 

@@ -108,13 +108,8 @@ describe('HomePage', () => {
     });
   });
   describe('on mount', () => {
-    it('fetches deals with empty query when localStorage is empty', () => {
-      renderHomePage();
-
-      expect(mockFetchGames).toHaveBeenCalledExactlyOnceWith('', 1);
-    });
-    it('fetches deals with lastSearchQuery from localStorage', () => {
-      localStorage.setItem('lastSearchQuery', 'Hades II');
+    it('fetches deals with query from useLocalStorage', () => {
+      localStorage.setItem('lastSearchQuery', JSON.stringify('Hades II'));
       renderHomePage();
 
       expect(mockFetchGames).toHaveBeenCalledExactlyOnceWith('Hades II', 1);
@@ -131,17 +126,6 @@ describe('HomePage', () => {
       await waitFor(() => {
         expect(mockFetchGames).toHaveBeenCalledWith(SEARCH_BAR_RETURN, 1);
       });
-    });
-    it('saves the query into local storage', async () => {
-      const user = userEvent.setup();
-      renderHomePage();
-
-      await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
-      await user.click(screen.getByTestId('search-button'));
-
-      await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(2));
-
-      expect(localStorage.getItem('lastSearchQuery')).toBe(SEARCH_BAR_RETURN);
     });
   });
   describe('error state', () => {

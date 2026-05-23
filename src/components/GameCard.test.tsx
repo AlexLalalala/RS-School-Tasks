@@ -67,7 +67,7 @@ describe('GameCard', () => {
 
     expect(screen.getByRole('link')).toHaveAttribute(
       'href',
-      `/${mockProps.dealId}`
+      `/page/1/${mockProps.dealId}`
     );
   });
 });

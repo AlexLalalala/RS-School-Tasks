@@ -39,8 +39,6 @@ const fetchDetailedDeal = async (dealId: string): Promise<DetailedDeal> => {
     throw new Error(`Something went wrong (${response.status}).`);
 
   const res = await response.json();
-  console.log(res);
-  console.log(toDetailedDeal(res));
 
   return toDetailedDeal(res);
 };

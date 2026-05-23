@@ -3,7 +3,7 @@ import fetchGames from '../api/fetchGames';
 import type { Deal } from '../types/Deal';
 import userEvent from '@testing-library/user-event';
 import HomePage from './HomePage';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { createMockDeal } from '../__tests__/factories';
 import Paginator from '../components/Paginator';
 import DealPanel from '../components/DealPanel';
@@ -82,6 +82,10 @@ beforeEach(() => {
   mockedPaginator.mockClear();
 });
 
+const LocationDisplay = () => {
+  const location = useLocation();
+  return <div data-testid="location">{location.pathname}</div>;
+};
 const renderHomePage = (initialPath = '/') => {
   return render(
     <MemoryRouter initialEntries={[initialPath]}>
@@ -93,6 +97,7 @@ const renderHomePage = (initialPath = '/') => {
           <Route path="page/:pageNumber/:dealId" element={<DealPanel />} />
         </Route>
       </Routes>
+      <LocationDisplay />
     </MemoryRouter>
   );
 };
@@ -203,5 +208,13 @@ describe('HomePage', () => {
         undefined
       );
     });
+  });
+  it('on search navigate to page 1', async () => {
+    const user = userEvent.setup();
+    renderHomePage('/page/4');
+
+    await user.click(screen.getByTestId('search-button'));
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/page/1');
   });
 });

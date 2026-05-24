@@ -2,6 +2,14 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import NavigationBar from './NavigationBar';
 
+vi.mock('./ErrorButton', () => ({
+  default: () => <div data-testid="error-button"></div>,
+}));
+
+vi.mock('./ThemeToggler', () => ({
+  default: () => <div data-testid="theme-toggler"></div>,
+}));
+
 const renderNavigationBar = (initialEntry = '/') =>
   render(
     <MemoryRouter initialEntries={[initialEntry]}>

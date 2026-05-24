@@ -38,7 +38,7 @@ function GameCard({
           </p>
           <Link
             to={`/page/${currentPage}/${dealId}`}
-            className="btn btn-outline-primary"
+            className="btn btn-outline-primary mt-auto"
           >
             See Details
           </Link>

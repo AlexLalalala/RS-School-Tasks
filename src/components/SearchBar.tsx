@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import styles from './SearchBar.module.css';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -18,7 +19,7 @@ function SearchBar({ onSearch, initialQuery }: SearchBarProps) {
   };
 
   return (
-    <form className="w-75 mx-auto" onSubmit={onSubmit}>
+    <form className={`w-75 mx-auto ${styles.SearchBar}`} onSubmit={onSubmit}>
       <div className="input-group mb-3">
         <input
           type="text"

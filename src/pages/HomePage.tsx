@@ -1,48 +1,34 @@
-import { useEffect, useState } from 'react';
-import type { Deal } from '../types/Deal';
 import fetchGames from '../api/fetchGames';
 import SearchBar from '../components/SearchBar';
 import DealsTable from '../components/DealsTable';
 import Paginator from '../components/Paginator';
-import { Outlet, useParams } from 'react-router';
+import { Outlet, useNavigate, useParams } from 'react-router';
+import useFetchFun from '../hooks/useFetchFun';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { useCallback } from 'react';
 
 function HomePage() {
-  const [deals, setDeals] = useState<Deal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<null | string>(null);
-  const [query, setQuery] = useState(
-    localStorage.getItem('lastSearchQuery') || ''
-  );
-  const [lastPageNumber, setLastPageNumber] = useState(1);
-  const currentPage = Number(useParams().pageNumber) || 1;
-  const dealId = useParams().dealId;
+  const [query, setQuery] = useLocalStorage('lastSearchQuery', '');
+
+  const navigate = useNavigate();
+
+  const { pageNumber, dealId } = useParams();
+  const currentPage = Number(pageNumber) || 1;
+
   const isPanelOpen = !!dealId;
 
-  useEffect(() => {
-    const loadDeals = async () => {
-      setLoading(true);
-      setErrorMessage(null);
-      localStorage.setItem('lastSearchQuery', query);
-      try {
-        const { deals: fetchedDeals, lastPageNumber: fetchedLastPage } =
-          await fetchGames(query, currentPage);
-        setDeals(fetchedDeals);
-        setLastPageNumber(fetchedLastPage);
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error ? error.message : 'Unknown error!'
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadDeals();
-  }, [query, currentPage]);
+  const fetchFun = useCallback(
+    () => fetchGames(query, currentPage),
+    [query, currentPage]
+  );
+  const { data, loading, errorMessage } = useFetchFun(fetchFun);
+  const { deals = [], lastPageNumber = 1 } = data ?? {};
 
   const handleSearch = (query: string) => {
-    localStorage.setItem('lastSearchQuery', query);
     setQuery(query);
+    if (currentPage !== 1 || dealId) {
+      navigate('/page/1');
+    }
   };
 
   return (
@@ -70,12 +56,14 @@ function HomePage() {
                 currentPage={currentPage}
                 lastPageNumber={lastPageNumber}
                 basePath=""
+                loading={loading}
               />
               <DealsTable deals={deals} loading={loading} />
               <Paginator
                 currentPage={currentPage}
                 lastPageNumber={lastPageNumber}
                 basePath=""
+                loading={loading}
               />
             </>
           )}

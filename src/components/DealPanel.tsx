@@ -1,33 +1,16 @@
-import { useEffect, useState, type FunctionComponent } from 'react';
+import { useCallback, type FunctionComponent } from 'react';
 import { Link, useParams } from 'react-router';
 import fetchDetailedDeal from '../api/fetchDetailedDeal';
-import type { DetailedDeal } from '../types/DetailedDeal';
-import { buildMetacriticURL } from '../utils';
+import { buildMetacriticURL } from '../utils/metacritic';
+import useFetchFun from '../hooks/useFetchFun';
 
 const DealPanel: FunctionComponent = () => {
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [deal, setDeal] = useState<DetailedDeal | null>(null);
-  const dealId = useParams().dealId || '';
+  const { dealId = '', pageNumber } = useParams();
+  const currentPage = Number(pageNumber) || 1;
 
-  useEffect(() => {
-    const loadDealDetails = async () => {
-      setLoading(true);
-      setErrorMessage(null);
-      try {
-        const fetchedDeal = await fetchDetailedDeal(dealId);
-        setDeal(fetchedDeal);
-      } catch (error) {
-        setErrorMessage(
-          error instanceof Error ? error.message : 'Unknown error!'
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchFun = useCallback(() => fetchDetailedDeal(dealId), [dealId]);
+  const { data: deal, loading, errorMessage } = useFetchFun(fetchFun);
 
-    loadDealDetails();
-  }, [dealId]);
   return (
     <div className="card shadow-sm h-100">
       <div className="card-body d-flex flex-column align-items-center text-center">
@@ -71,7 +54,7 @@ const DealPanel: FunctionComponent = () => {
             {deal?.metacriticLink ? (
               <a
                 href={buildMetacriticURL(deal?.metacriticLink)}
-                className="btn btn btn-outline-success"
+                className="btn btn-outline-success"
               >
                 See Metacritic
               </a>
@@ -80,7 +63,10 @@ const DealPanel: FunctionComponent = () => {
                 No Metacritic
               </button>
             )}
-            <Link to="../" className="btn btn-outline-secondary mt-2">
+            <Link
+              to={`/page/${currentPage}`}
+              className="btn btn-outline-secondary mt-2"
+            >
               Close
             </Link>
           </>

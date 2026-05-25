@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: '/RS-School-Tasks',
   plugins: [react()],
+  build: { sourcemap: true },
   test: {
     environment: 'jsdom',
     globals: true,

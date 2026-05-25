@@ -1,73 +1,82 @@
 import { MemoryRouter } from 'react-router';
 import GameCard from './GameCard';
 import { render, screen } from '@testing-library/react';
+import { createMockDeal } from '../__tests__/factories';
+import type { Deal } from '../types/Deal';
+import userEvent from '@testing-library/user-event';
+import useDealStore from '../stores/useDealStore';
 
-const mockProps = {
-  title: "Ni no Kuni II: Revenant Kingdom - The Prince's Edition",
+const mockDeal = createMockDeal({
+  dealId: '1',
+  title: 'Hades II',
   normalPrice: 79.99,
   salePrice: 11.99,
-  thumb:
-    'https://sttc.gamersgate.com/images/product/ni-no-kunitm-ii-revenant-kingdom-the-princes-edition/cover-180-b6d878.jpg',
-  metacriticLink: 'null',
-  dealId: '111a111',
-};
+});
 
-const renderGameCard = (
-  props: {
-    title: string;
-    normalPrice: number;
-    salePrice: number;
-    thumb: string;
-    metacriticLink: string;
-    dealId: string;
-  },
-  path = '/'
-) => {
+const renderGameCard = (deal: Deal, path = '/') => {
   render(
     <MemoryRouter initialEntries={[path]}>
-      <GameCard {...props} />
+      <GameCard deal={deal} />
     </MemoryRouter>
   );
 };
 
+beforeEach(() => {
+  useDealStore.setState({ selectedDeals: [] });
+});
+
 describe('GameCard', () => {
   it('GameCard should render title', () => {
-    renderGameCard(mockProps);
+    renderGameCard(mockDeal);
 
-    expect(
-      screen.getByText("Ni no Kuni II: Revenant Kingdom - The Prince's Edition")
-    ).toBeInTheDocument();
+    expect(screen.getByText('Hades II')).toBeInTheDocument();
   });
 
   it('GameCard should render normal price', () => {
-    renderGameCard(mockProps);
+    renderGameCard(mockDeal);
 
     expect(screen.getByText('79.99')).toBeInTheDocument();
   });
 
   it('GameCard should render sale price', () => {
-    renderGameCard(mockProps);
+    renderGameCard(mockDeal);
 
     expect(screen.getByText('11.99')).toBeInTheDocument();
   });
 
-  it('GameCard should render image with proper alt text', () => {
-    renderGameCard(mockProps);
+  it('GameCard should render image with proper alt and src', () => {
+    renderGameCard(mockDeal);
 
     const image = screen.getByRole('img');
-    expect(image).toHaveAttribute(
-      'src',
-      'https://sttc.gamersgate.com/images/product/ni-no-kunitm-ii-revenant-kingdom-the-princes-edition/cover-180-b6d878.jpg'
-    );
-    expect(image.getAttribute('alt')).toMatch(/Ni no Kuni II/);
+    expect(image).toHaveAttribute('src', mockDeal.thumb);
+    expect(image.getAttribute('alt')).toMatch(/Hades II/);
   });
 
   it('GameCard should render a link to the DealPanel', () => {
-    renderGameCard(mockProps);
+    renderGameCard(mockDeal);
 
     expect(screen.getByRole('link')).toHaveAttribute(
       'href',
-      `/${mockProps.dealId}`
+      `/page/1/${mockDeal.dealId}`
     );
+  });
+
+  it('saves deal into useDealStore on checking the box', async () => {
+    const user = userEvent.setup();
+    renderGameCard(mockDeal);
+
+    await user.click(screen.getByRole('checkbox'));
+
+    expect(useDealStore.getState().selectedDeals).toEqual([mockDeal]);
+  });
+
+  it('deletes deal from useDealStore after unchecking', async () => {
+    const user = userEvent.setup();
+    renderGameCard(mockDeal);
+
+    await user.click(screen.getByRole('checkbox'));
+    await user.click(screen.getByRole('checkbox'));
+
+    expect(useDealStore.getState().selectedDeals).toEqual([]);
   });
 });

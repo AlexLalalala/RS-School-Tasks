@@ -6,7 +6,7 @@ import ErrorCard from './ErrorCard';
 import ErrorBoundary from './ErrorBoundary';
 
 interface DealsTableProps {
-  deals: Deal[] | null;
+  deals: Deal[];
   loading: boolean;
 }
 
@@ -27,7 +27,7 @@ function DealsTable({ deals, loading }: DealsTableProps) {
           : deals?.map((deal: Deal) => (
               <div className="col" key={`card-for-${deal.steamId}`}>
                 <ErrorBoundary fallback={<ErrorCard />}>
-                  <GameCard {...deal} />
+                  <GameCard deal={deal} />
                 </ErrorBoundary>
               </div>
             ))}

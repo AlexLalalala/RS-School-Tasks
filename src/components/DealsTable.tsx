@@ -27,7 +27,7 @@ function DealsTable({ deals, loading }: DealsTableProps) {
           : deals?.map((deal: Deal) => (
               <div className="col" key={`card-for-${deal.steamId}`}>
                 <ErrorBoundary fallback={<ErrorCard />}>
-                  <GameCard {...deal} />
+                  <GameCard deal={deal} />
                 </ErrorBoundary>
               </div>
             ))}

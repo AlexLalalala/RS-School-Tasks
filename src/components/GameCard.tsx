@@ -3,7 +3,7 @@ import useDealStore from '../stores/useDealStore';
 import type { Deal } from '../types/Deal';
 import type { ChangeEvent } from 'react';
 
-function GameCard(deal: Deal) {
+function GameCard({ deal }: { deal: Deal }) {
   const { title, normalPrice, salePrice, thumb, dealId } = deal;
   const { pageNumber } = useParams();
   const currentPage = Number(pageNumber) || 1;

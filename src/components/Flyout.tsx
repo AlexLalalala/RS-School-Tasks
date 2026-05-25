@@ -1,10 +1,17 @@
 import useDealStore from '../stores/useDealStore';
+import { downloadCsv, generateCsv } from '../utils/csv';
 
 const Flyout = () => {
+  const selectedDeals = useDealStore((state) => state.selectedDeals);
   const selectedCount = useDealStore((state) => state.selectedDeals.length);
   const unselectAll = useDealStore((state) => state.unselectAll);
 
   if (!selectedCount) return <> </>;
+
+  const handleDownloadClick = () => {
+    const csv = generateCsv(selectedDeals);
+    downloadCsv(csv, `${selectedCount}_deals.csv`);
+  };
 
   return (
     <div
@@ -29,6 +36,7 @@ const Flyout = () => {
           <button
             className="btn btn-outline-secondary"
             aria-label="Download CSV"
+            onClick={handleDownloadClick}
           >
             <i className="bi bi-download"></i>
           </button>

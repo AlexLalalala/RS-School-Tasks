@@ -22,10 +22,14 @@ const Flyout = () => {
           <button
             className="btn btn-outline-warning flex-grow-1"
             onClick={unselectAll}
+            aria-label="Unselect all"
           >
             Unselect <i className="bi bi-check2-square"></i>
           </button>
-          <button className="btn btn-outline-secondary">
+          <button
+            className="btn btn-outline-secondary"
+            aria-label="Download CSV"
+          >
             <i className="bi bi-download"></i>
           </button>
         </div>

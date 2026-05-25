@@ -1,12 +1,12 @@
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import useDealStore from '../stores/useDealStore';
 import type { Deal } from '../types/Deal';
-import type { ChangeEvent } from 'react';
 
 function GameCard({ deal }: { deal: Deal }) {
   const { title, normalPrice, salePrice, thumb, dealId } = deal;
   const { pageNumber } = useParams();
   const currentPage = Number(pageNumber) || 1;
+  const detailPanelUrl = `/page/${currentPage}/${dealId}`;
 
   const selectDeal = useDealStore((state) => state.selectDeal);
   const unselectDeal = useDealStore((state) => state.unselectDeal);
@@ -15,15 +15,27 @@ function GameCard({ deal }: { deal: Deal }) {
     state.selectedDeals.some((d) => d.dealId === dealId)
   );
 
-  const handleCheckboxChange = (e: ChangeEvent) => {
-    e.stopPropagation();
+  const handleCheckboxChange = () => {
     if (isSelected) unselectDeal(dealId);
     else selectDeal(deal);
   };
 
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(detailPanelUrl);
+  };
+
   return (
     <>
-      <div className="card h-100" style={{ width: '18rem' }}>
+      <div
+        className="card h-100"
+        style={{ width: '18rem' }}
+        onClick={handleClick}
+      >
         <img
           src={thumb}
           className="card-img-top"
@@ -40,7 +52,7 @@ function GameCard({ deal }: { deal: Deal }) {
           </p>
           <div className="mt-auto d-flex align-items-center">
             <Link
-              to={`/page/${currentPage}/${dealId}`}
+              to={detailPanelUrl}
               className="btn btn-outline-primary flex-grow-1"
             >
               See Details
@@ -50,6 +62,7 @@ function GameCard({ deal }: { deal: Deal }) {
               className="form-check-input fs-4 m-2 me-0"
               checked={isSelected}
               onChange={handleCheckboxChange}
+              onClick={handleCheckboxClick}
               aria-label={`checkbox-${title}`}
             />
           </div>

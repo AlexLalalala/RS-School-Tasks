@@ -1,7 +1,7 @@
 import { useCallback, type FunctionComponent } from 'react';
 import { Link, useParams } from 'react-router';
 import fetchDetailedDeal from '../api/fetchDetailedDeal';
-import { buildMetacriticURL } from '../utils';
+import { buildMetacriticURL } from '../utils/metacritic';
 import useFetchFun from '../hooks/useFetchFun';
 
 const DealPanel: FunctionComponent = () => {

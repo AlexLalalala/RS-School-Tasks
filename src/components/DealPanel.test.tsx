@@ -2,16 +2,22 @@ import { render, screen, waitFor } from '@testing-library/react';
 import fetchDetailedDeal from '../api/fetchDetailedDeal';
 import DealPanel from './DealPanel';
 import { MemoryRouter } from 'react-router';
-import { createMockDetailedDeal } from '../__tests__/factories';
+import {
+  createMockDetailedDeal,
+  createTestQueryClient,
+} from '../__tests__/factories';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 vi.mock('../api/fetchDetailedDeal');
 const mockedFetchedDetailedDeal = vi.mocked(fetchDetailedDeal);
 
-const renderDealPanel = (initialPath = '111a111') => {
+const renderDealPanel = (initialPath = '/page/1/111a111') => {
   render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <DealPanel />
-    </MemoryRouter>
+    <QueryClientProvider client={createTestQueryClient()}>
+      <MemoryRouter initialEntries={[initialPath]}>
+        <DealPanel />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 };
 
@@ -40,6 +46,6 @@ describe('DealPanel', () => {
     mockedFetchedDetailedDeal.mockThrowOnce(new Error('Error'));
     renderDealPanel();
 
-    expect(screen.getByRole('alert')).toBeInTheDocument();
+    waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
   });
 });

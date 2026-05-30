@@ -4,9 +4,10 @@ import type { Deal } from '../types/Deal';
 import userEvent from '@testing-library/user-event';
 import HomePage from './HomePage';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
-import { createMockDeal } from '../__tests__/factories';
+import { createMockDeal, createTestQueryClient } from '../__tests__/factories';
 import Paginator from '../components/Paginator';
 import DealPanel from '../components/DealPanel';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 vi.mock('../api/fetchGames');
 const mockFetchGames = vi.mocked(fetchGames);
@@ -88,17 +89,19 @@ const LocationDisplay = () => {
 };
 const renderHomePage = (initialPath = '/') => {
   return render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <Routes>
-        <Route element={<HomePage />}>
-          <Route index element={null} />
-          <Route path="/:dealId" element={<DealPanel />} />
-          <Route path="page/:pageNumber" element={null} />
-          <Route path="page/:pageNumber/:dealId" element={<DealPanel />} />
-        </Route>
-      </Routes>
-      <LocationDisplay />
-    </MemoryRouter>
+    <QueryClientProvider client={createTestQueryClient()}>
+      <MemoryRouter initialEntries={[initialPath]}>
+        <Routes>
+          <Route element={<HomePage />}>
+            <Route index element={null} />
+            <Route path="/:dealId" element={<DealPanel />} />
+            <Route path="page/:pageNumber" element={null} />
+            <Route path="page/:pageNumber/:dealId" element={<DealPanel />} />
+          </Route>
+        </Routes>
+        <LocationDisplay />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 };
 

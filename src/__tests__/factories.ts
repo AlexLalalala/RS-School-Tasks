@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import type { Deal } from '../types/Deal';
 import type { DetailedDeal } from '../types/DetailedDeal';
 
@@ -28,3 +29,15 @@ export const createMockDetailedDeal = (
   cheapestPrice: { price: 10, date: new Date(2024, 2, 10, 2, 30) },
   ...overrides,
 });
+
+export const createTestQueryClient = () => {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        gcTime: Infinity,
+        retry: false,
+        staleTime: 0,
+      },
+    },
+  });
+};

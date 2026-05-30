@@ -27,3 +27,4 @@ dist-ssr
 # My
 .husky
 coverage
+.env

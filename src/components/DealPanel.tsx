@@ -10,6 +10,7 @@ const DealPanel: FunctionComponent = () => {
 
   const {
     isPending,
+    isFetching,
     isError,
     data: deal,
     error,
@@ -19,7 +20,9 @@ const DealPanel: FunctionComponent = () => {
   });
 
   return (
-    <div className="card shadow-sm h-100">
+    <div
+      className={`card shadow-sm h-100 fetch-fade ${isFetching && !isPending ? 'opacity-50' : 'opacity-100'}`}
+    >
       <div className="card-body d-flex flex-column align-items-center text-center">
         {isPending ? (
           <div className="spinner-border text-primary mt-3" role="status">

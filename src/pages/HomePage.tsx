@@ -23,7 +23,7 @@ function HomePage() {
     }
   };
 
-  const { isPending, isError, data, error } = useQuery({
+  const { isPending, isFetching, isError, data, error } = useQuery({
     queryKey: ['games', query, currentPage],
     queryFn: () => fetchGames(query, currentPage),
   });
@@ -49,7 +49,11 @@ function HomePage() {
               </button>
             </div>
           ) : (
-            <>
+            <div
+              className={
+                isFetching && !isPending ? 'opacity-50' : 'opacity-100'
+              }
+            >
               <Paginator
                 currentPage={currentPage}
                 lastPageNumber={lastPageNumber}
@@ -63,7 +67,7 @@ function HomePage() {
                 basePath=""
                 loading={isPending}
               />
-            </>
+            </div>
           )}
         </section>
         {isPanelOpen && (

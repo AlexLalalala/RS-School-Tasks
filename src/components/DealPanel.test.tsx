@@ -6,14 +6,18 @@ import {
   createMockDetailedDeal,
   createTestQueryClient,
 } from '../__tests__/factories';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 vi.mock('../api/fetchDetailedDeal');
 const mockedFetchedDetailedDeal = vi.mocked(fetchDetailedDeal);
 
-const renderDealPanel = (initialPath = '/page/1/111a111') => {
-  render(
-    <QueryClientProvider client={createTestQueryClient()}>
+const renderDealPanel = (
+  initialPath = '/page/1/111a111',
+  queryClient?: QueryClient
+) => {
+  if (!queryClient) queryClient = createTestQueryClient();
+  return render(
+    <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[initialPath]}>
         <Routes>
           <Route path="/page/:pageNumber/:dealId" element={<DealPanel />} />
@@ -71,5 +75,20 @@ describe('DealPanel', () => {
     await waitFor(() => {
       expect(screen.getByText(/specific test name error/i)).toBeInTheDocument();
     });
+  });
+  it('caches properly', async () => {
+    const cacheTestQueryClient = createTestQueryClient(5 * 60 * 1000);
+    const { unmount } = renderDealPanel(undefined, cacheTestQueryClient);
+
+    await waitFor(() =>
+      expect(mockedFetchedDetailedDeal).toHaveBeenCalledTimes(1)
+    );
+    unmount();
+    renderDealPanel(undefined, cacheTestQueryClient);
+
+    expect(
+      screen.getByRole('heading', { name: 'Hades II' })
+    ).toBeInTheDocument();
+    expect(mockedFetchedDetailedDeal).toHaveBeenCalledTimes(1);
   });
 });

@@ -30,13 +30,13 @@ export const createMockDetailedDeal = (
   ...overrides,
 });
 
-export const createTestQueryClient = () => {
+export const createTestQueryClient = (staleTime = 0) => {
   return new QueryClient({
     defaultOptions: {
       queries: {
         gcTime: Infinity,
         retry: false,
-        staleTime: 0,
+        staleTime: staleTime,
       },
     },
   });

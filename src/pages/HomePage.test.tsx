@@ -7,7 +7,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { createMockDeal, createTestQueryClient } from '../__tests__/factories';
 import Paginator from '../components/Paginator';
 import DealPanel from '../components/DealPanel';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 vi.mock('../api/fetchGames');
 const mockFetchGames = vi.mocked(fetchGames);
@@ -87,9 +87,10 @@ const LocationDisplay = () => {
   const location = useLocation();
   return <div data-testid="location">{location.pathname}</div>;
 };
-const renderHomePage = (initialPath = '/') => {
+const renderHomePage = (initialPath = '/', queryClient?: QueryClient) => {
+  if (!queryClient) queryClient = createTestQueryClient();
   return render(
-    <QueryClientProvider client={createTestQueryClient()}>
+    <QueryClientProvider client={queryClient}>
       <MemoryRouter initialEntries={[initialPath]}>
         <Routes>
           <Route element={<HomePage />}>
@@ -219,5 +220,16 @@ describe('HomePage', () => {
     await user.click(screen.getByTestId('search-button'));
 
     expect(screen.getByTestId('location')).toHaveTextContent('/page/1');
+  });
+  it('caches correctly', async () => {
+    const cacheTestQueryClient = createTestQueryClient(5 * 60 * 1000);
+    const { unmount } = renderHomePage(undefined, cacheTestQueryClient);
+
+    await waitFor(() => expect(mockFetchGames).toHaveBeenCalledTimes(1));
+    unmount();
+    renderHomePage(undefined, cacheTestQueryClient);
+
+    expect(screen.getByTestId('deals-table')).toBeInTheDocument();
+    expect(mockFetchGames).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import NavigationBar from './NavigationBar';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { createTestQueryClient } from '../__tests__/factories';
 
 vi.mock('./ErrorButton', () => ({
   default: () => <div data-testid="error-button"></div>,
@@ -12,9 +14,11 @@ vi.mock('./ThemeToggler', () => ({
 
 const renderNavigationBar = (initialEntry = '/') =>
   render(
-    <MemoryRouter initialEntries={[initialEntry]}>
-      <NavigationBar />
-    </MemoryRouter>
+    <QueryClientProvider client={createTestQueryClient()}>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <NavigationBar />
+      </MemoryRouter>
+    </QueryClientProvider>
   );
 
 describe('Navigation', () => {

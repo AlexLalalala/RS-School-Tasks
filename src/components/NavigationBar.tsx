@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import { NavLink, type NavLinkRenderProps } from 'react-router';
 import ErrorButton from './ErrorButton';
 import ThemeToggler from './ThemeToggler';
+import CacheInvalidator from './CacheInvalidator';
 
 const NavigationBar: FunctionComponent = () => {
   const navLinkClass = ({ isActive }: NavLinkRenderProps) =>
@@ -20,8 +21,9 @@ const NavigationBar: FunctionComponent = () => {
           </NavLink>
         </li>
       </ul>
-      <div className="ms-auto">
+      <div className="ms-auto d-flex align-items-center">
         <ThemeToggler />
+        <CacheInvalidator />
         <ErrorButton />
       </div>
     </nav>

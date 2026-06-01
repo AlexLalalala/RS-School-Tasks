@@ -1,26 +1,36 @@
-import { useCallback, type FunctionComponent } from 'react';
+import { type FunctionComponent } from 'react';
 import { Link, useParams } from 'react-router';
 import fetchDetailedDeal from '../api/fetchDetailedDeal';
 import { buildMetacriticURL } from '../utils/metacritic';
-import useFetchFun from '../hooks/useFetchFun';
+import { useQuery } from '@tanstack/react-query';
 
 const DealPanel: FunctionComponent = () => {
   const { dealId = '', pageNumber } = useParams();
   const currentPage = Number(pageNumber) || 1;
 
-  const fetchFun = useCallback(() => fetchDetailedDeal(dealId), [dealId]);
-  const { data: deal, loading, errorMessage } = useFetchFun(fetchFun);
+  const {
+    isPending,
+    isFetching,
+    isError,
+    data: deal,
+    error,
+  } = useQuery({
+    queryKey: ['dealDetails', dealId],
+    queryFn: () => fetchDetailedDeal(dealId),
+  });
 
   return (
-    <div className="card shadow-sm h-100">
+    <div
+      className={`card shadow-sm h-100 fetch-fade ${isFetching && !isPending ? 'opacity-50' : 'opacity-100'}`}
+    >
       <div className="card-body d-flex flex-column align-items-center text-center">
-        {loading ? (
+        {isPending ? (
           <div className="spinner-border text-primary mt-3" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
-        ) : errorMessage ? (
+        ) : isError ? (
           <div className="alert alert-danger w-100" role="alert">
-            ⚠️ {errorMessage}
+            ⚠️ {error.message}
           </div>
         ) : (
           <>

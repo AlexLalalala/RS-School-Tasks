@@ -20,12 +20,18 @@ function DealsTable({ deals, loading }: DealsTableProps) {
       <div className="row row-cols-1 row-cols-md-3 g-4">
         {loading
           ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
-              <div className="col" key={`skeleton-card-${i}`}>
+              <div
+                className="col d-flex justify-content-center"
+                key={`skeleton-card-${i}`}
+              >
                 <SkeletonCard />
               </div>
             ))
           : deals?.map((deal: Deal) => (
-              <div className="col" key={`card-for-${deal.steamId}`}>
+              <div
+                className="col d-flex justify-content-center"
+                key={`card-for-${deal.steamId}`}
+              >
                 <ErrorBoundary fallback={<ErrorCard />}>
                   <GameCard deal={deal} />
                 </ErrorBoundary>

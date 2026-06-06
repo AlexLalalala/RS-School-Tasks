@@ -5,6 +5,7 @@ import Paginator from '../components/Paginator';
 import { Outlet, useNavigate, useParams } from 'react-router';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useQuery } from '@tanstack/react-query';
+import FormController from '../components/FormController';
 
 function HomePage() {
   const [query, setQuery] = useLocalStorage('lastSearchQuery', '');
@@ -13,7 +14,6 @@ function HomePage() {
 
   const { pageNumber, dealId } = useParams();
   const currentPage = Number(pageNumber) || 1;
-
   const isPanelOpen = !!dealId;
 
   const handleSearch = (query: string) => {
@@ -61,12 +61,15 @@ function HomePage() {
                 loading={isPending}
               />
               <DealsTable deals={deals} loading={isPending} />
-              <Paginator
-                currentPage={currentPage}
-                lastPageNumber={lastPageNumber}
-                basePath=""
-                loading={isPending}
-              />
+              <div className="mt-3">
+                <Paginator
+                  currentPage={currentPage}
+                  lastPageNumber={lastPageNumber}
+                  basePath=""
+                  loading={isPending}
+                />
+              </div>
+              <FormController />
             </div>
           )}
         </section>

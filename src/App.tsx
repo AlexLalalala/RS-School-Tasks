@@ -1,13 +1,12 @@
-import './App.css'
-import FormController from './components/FormController'
+import './App.css';
+import FormController from './components/FormController';
 
 function App() {
-
   return (
     <>
-      <FormController/>
+      <FormController />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

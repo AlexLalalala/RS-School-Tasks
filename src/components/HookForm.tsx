@@ -1,9 +1,10 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { type FormFields, formSchema } from '../validation/formSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Gender } from '../constants/gender';
 import useFormStore from '../stores/useFormStore';
 import fileToBase64 from '../utils/fileToBase64';
+import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 
 interface HookFormProps {
   onClose: () => void;
@@ -17,10 +18,12 @@ const HookForm = ({ onClose }: HookFormProps) => {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    control,
   } = useForm<FormFields>({
     resolver: yupResolver(formSchema),
     mode: 'onChange',
   });
+  const password = useWatch({ control, name: 'password' });
 
   const saveForm = async (rawData: FormFields) => {
     const image = await fileToBase64(rawData.file[0]);
@@ -76,6 +79,7 @@ const HookForm = ({ onClose }: HookFormProps) => {
         <div className="text-danger small" style={{ minHeight: '1.25rem' }}>
           {errors.password?.message}
         </div>
+        <PasswordStrengthIndicator password={password} />
       </div>
       {/* Confirm Password */}
       <div className="mb-3">

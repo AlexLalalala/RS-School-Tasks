@@ -4,6 +4,7 @@ import { Gender } from '../constants/gender';
 import { formSchema, type FormFields } from '../validation/formSchema';
 import { ValidationError } from 'yup';
 import fileToBase64 from '../utils/fileToBase64';
+import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 
 type ErrorMessages = Partial<Record<keyof FormFields, string>>;
 
@@ -13,6 +14,7 @@ interface UncontrolledFormProps {
 
 const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
   const [errorMessages, setErrorMessages] = useState<ErrorMessages>({});
+  const [password, setPassword] = useState<string>('');
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -126,10 +128,12 @@ const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           ref={confirmPasswordRef}
           className="form-control"
           type="password"
+          onChange={(e) => setPassword(e.target.value)}
         />
         <div className="text-danger small" style={{ minHeight: '1.25rem' }}>
           {errorMessages.confirmPassword}
         </div>
+        <PasswordStrengthIndicator password={password} />
       </div>
       {/* Name */}
       <div className="mb-3">

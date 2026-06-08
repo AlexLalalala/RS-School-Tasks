@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { COUNTRY_LIST } from '../constants/countryList';
-import { type FormData } from '../validation/formSchema';
+import { type FormFields } from '../validation/formSchema';
 
 export interface FormSubmission {
-  id: number;
+  id: string;
   submittedAt: Date;
-  data: Omit<FormData, 'password' | 'confirmPassword' | 'image'> & {
+  data: Omit<FormFields, 'password' | 'confirmPassword' | 'file'> & {
     image: string;
   };
 }

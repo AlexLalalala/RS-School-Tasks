@@ -1,5 +1,6 @@
 import * as yup from 'yup';
-import useFormStore from '../stores/useFormStore';
+import { COUNTRY_LIST } from '../constants/countryList';
+import { Gender } from '../constants/gender';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/png', 'image/jpeg'];
@@ -30,6 +31,7 @@ export const formSchema = yup.object({
 
   password: yup
     .string()
+    .required(requiredMessageFactory('Password'))
     .min(8)
     .matches(/[0-9]/, symbolRequirementMessageFactory('number'))
     .matches(/[a-z]/, symbolRequirementMessageFactory('lower case letter'))
@@ -41,16 +43,20 @@ export const formSchema = yup.object({
 
   confirmPassword: yup
     .string()
+    .required(requiredMessageFactory('Confirmation password'))
     .oneOf([yup.ref('password')], 'Passwords must match'),
 
-  gender: yup.string().required(requiredMessageFactory('Gender')),
+  gender: yup
+    .string()
+    .required(requiredMessageFactory('Gender'))
+    .oneOf(Object.values(Gender), 'Not valid gender value'),
 
   terms: yup.boolean().required().oneOf([true], 'You must accept the terms'),
 
   country: yup
     .string()
     .required(requiredMessageFactory('Country'))
-    .oneOf(useFormStore.getState().countries, 'Country must be in the list'),
+    .oneOf(COUNTRY_LIST, 'Country must be in the list'),
 
   file: yup
     .mixed<FileList>()
@@ -68,4 +74,4 @@ export const formSchema = yup.object({
     }),
 });
 
-export type FormData = yup.InferType<typeof formSchema>;
+export type FormFields = yup.InferType<typeof formSchema>;

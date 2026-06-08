@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import Modal from './Modal';
+import UncontrolledForm from './UncontrolledForm';
+import HookForm from './HookForm';
 
 type ActiveForm = 'hookform' | 'uncontrolled' | null;
 
@@ -33,9 +35,9 @@ const FormController = () => {
       </button>
       {activeForm !== null && (
         <Modal onClose={handleFormClose} title="Form">
-          {activeForm === 'hookform' && <div>Hook Form Placeholder</div>}
+          {activeForm === 'hookform' && <HookForm onClose={handleFormClose} />}
           {activeForm === 'uncontrolled' && (
-            <div>Uncontrolled Form Placeholder</div>
+            <UncontrolledForm onClose={handleFormClose} />
           )}
         </Modal>
       )}

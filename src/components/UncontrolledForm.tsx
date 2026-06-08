@@ -113,10 +113,12 @@ const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           ref={passwordRef}
           className="form-control"
           type="password"
+          onChange={(e) => setPassword(e.target.value)}
         />
         <div className="text-danger small" style={{ minHeight: '1.25rem' }}>
           {errorMessages.password}
         </div>
+        <PasswordStrengthIndicator password={password} />
       </div>
       {/* Confirm Password */}
       <div className="mb-3">
@@ -128,12 +130,10 @@ const UncontrolledForm = ({ onClose }: UncontrolledFormProps) => {
           ref={confirmPasswordRef}
           className="form-control"
           type="password"
-          onChange={(e) => setPassword(e.target.value)}
         />
         <div className="text-danger small" style={{ minHeight: '1.25rem' }}>
           {errorMessages.confirmPassword}
         </div>
-        <PasswordStrengthIndicator password={password} />
       </div>
       {/* Name */}
       <div className="mb-3">

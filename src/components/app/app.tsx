@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useReducer } from 'react';
 import { useCo2Data } from '../../hooks/useCo2Data';
 import { LoadingSpinner } from '../loading-spinner/loading-spinner';
 import { SearchBar } from '../search-bar/search-bar';
 import { YearSelector } from '../year-selector/year-selector';
 import { CountryList } from '../country-list/country-list';
-import { ColumnModal } from '../column-modal/column-modal';
 import { getAvailableYears, getAvailableColumns } from '../../utils/data-transformers';
-
 import styles from './app.module.css';
+import ColumnModal from '../column-modal/column-modal';
+
 
 type AppState = {
   searchQuery: string;
@@ -19,10 +19,48 @@ type AppState = {
   isColumnModalOpen: boolean;
 };
 
-export const App = () => {
-  const { data, isLoading, error } = useCo2Data();
+type ReducerAction =
+  | { type: 'setSearchQuery'; value: string }
+  | { type: 'setSelectedRegion'; value: string }
+  | { type: 'setSelectedYear'; value: number }
+  | { type: 'setSortField'; value: 'name' | 'population' }
+  | { type: 'toggleOrder' }
+  | { type: 'toggleSelectedColumn'; column: string }
+  | { type: 'toggleColumnModalOpen' };
 
-  const [state, setState] = useState<AppState>({
+
+const stateReducer = (state: AppState, action: ReducerAction): AppState => {
+  switch (action.type){
+    case 'setSearchQuery':{
+      return {...state, searchQuery: action.value}
+    }
+    case 'setSelectedRegion':{
+      return {...state, selectedRegion: action.value}
+    }
+    case 'setSelectedYear':{
+      return {...state, selectedYear: action.value}
+    }
+    case 'setSortField':{
+      return {...state, sortField: action.value}
+    }
+    case 'toggleOrder':{
+      return {...state, sortOrder: state.sortOrder === 'asc' ? 'desc' : 'asc'}
+    }
+    case 'toggleSelectedColumn':{
+      return {
+      ...state,
+      selectedColumns: state.selectedColumns.includes(action.column)
+        ? state.selectedColumns.filter((c) => c !== action.column)
+        : [...state.selectedColumns, action.column],
+    }
+    }
+    case 'toggleColumnModalOpen': {
+      return { ...state, isColumnModalOpen: !state.isColumnModalOpen }
+    }
+  }
+}
+
+const initialState: AppState = {
     searchQuery: '',
     selectedRegion: '',
     selectedYear: 2020,
@@ -30,42 +68,39 @@ export const App = () => {
     sortOrder: 'desc',
     selectedColumns: ['year', 'population', 'co2', 'co2_per_capita'],
     isColumnModalOpen: false,
-  });
+  }
 
-  const years = data ? getAvailableYears(data) : [];
-  const availableColumns = getAvailableColumns();
+export const App = () => {
+  const { data, isLoading, error } = useCo2Data();
 
-  const handleSearch = (value: string) => {
-    setState({ ...state, searchQuery: value });
-  };
+  const [state, dispatch] = useReducer(stateReducer, initialState)
 
-  const handleYearChange = (year: number) => {
-    setState({ ...state, selectedYear: year });
-  };
+  const years = useMemo(() => data ? getAvailableYears(data) : [], [data]);
+  const availableColumns = useMemo(() => getAvailableColumns(), []);
 
-  const handleSortFieldChange = (field: 'name' | 'population') => {
-    setState({ ...state, sortField: field });
-  };
+  const handleSearch = useCallback((value: string) => {
+    dispatch({type: 'setSearchQuery', value: value})
+  }, []);
 
-  const handleSortOrderToggle = () => {
-    setState({
-      ...state,
-      sortOrder: state.sortOrder === 'asc' ? 'desc' : 'asc',
-    });
-  };
+  const handleYearChange = useCallback((year: number) => {
+    dispatch({type: 'setSelectedYear', value: year})
+  }, []);
 
-  const handleColumnToggle = (column: string) => {
-    setState({
-      ...state,
-      selectedColumns: state.selectedColumns.includes(column)
-        ? state.selectedColumns.filter((c) => c !== column)
-        : [...state.selectedColumns, column],
-    });
-  };
+  const handleSortFieldChange = useCallback((field: 'name' | 'population') => {
+    dispatch({type: 'setSortField', value: field})
+  }, []);
 
-  const handleModalToggle = () => {
-    setState({ ...state, isColumnModalOpen: !state.isColumnModalOpen });
-  };
+  const handleSortOrderToggle = useCallback(() => {
+    dispatch({type: 'toggleOrder'});
+  }, []);
+
+  const handleColumnToggle = useCallback((column: string) => {
+    dispatch({type: 'toggleSelectedColumn', column: column})
+  }, []);
+
+  const handleModalToggle = useCallback(() => {
+    dispatch({type: 'toggleColumnModalOpen'})
+  }, []);
 
   if (isLoading) {
     return <LoadingSpinner />;

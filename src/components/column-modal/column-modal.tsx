@@ -8,7 +8,7 @@ type ColumnModalProps = {
   onClose: () => void;
 };
 
-export const ColumnModal = ({
+const ColumnModal = ({
   isOpen,
   availableColumns,
   selectedColumns,
@@ -47,3 +47,5 @@ export const ColumnModal = ({
     </div>
   );
 };
+
+export default ColumnModal

@@ -76,7 +76,7 @@ export const App = () => {
   const [state, dispatch] = useReducer(stateReducer, initialState)
 
   const years = useMemo(() => data ? getAvailableYears(data) : [], [data]);
-  const availableColumns = useMemo(() => getAvailableColumns(), []);
+  const availableColumns = getAvailableColumns();
 
   const handleSearch = useCallback((value: string) => {
     dispatch({type: 'setSearchQuery', value: value})
@@ -86,13 +86,13 @@ export const App = () => {
     dispatch({type: 'setSelectedYear', value: year})
   }, []);
 
-  const handleSortFieldChange = useCallback((field: 'name' | 'population') => {
+  const handleSortFieldChange = (field: 'name' | 'population') => {
     dispatch({type: 'setSortField', value: field})
-  }, []);
+  };
 
-  const handleSortOrderToggle = useCallback(() => {
+  const handleSortOrderToggle = () => {
     dispatch({type: 'toggleOrder'});
-  }, []);
+  };
 
   const handleColumnToggle = useCallback((column: string) => {
     dispatch({type: 'toggleSelectedColumn', column: column})

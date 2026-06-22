@@ -4,6 +4,8 @@ import { useParams, useRouter } from 'next/navigation';
 import useDealStore from '../stores/useDealStore';
 import type { Deal } from '../types/Deal';
 import Link from 'next/link';
+import Image from 'next/image';
+import { THUMB_HEIGHT, THUMB_WIDTH } from '@/constant';
 
 function GameCard({ deal }: { deal: Deal }) {
   const { title, normalPrice, salePrice, thumb, dealId } = deal;
@@ -39,11 +41,14 @@ function GameCard({ deal }: { deal: Deal }) {
         style={{ width: '18rem' }}
         onClick={handleClick}
       >
-        <img
+        <Image
           src={thumb}
+          width={THUMB_WIDTH}
+          height={THUMB_HEIGHT}
           className="card-img-top"
           alt={`Thumbnail of ${title}`}
           loading="lazy"
+          style={{ width: '100%', height: 'auto' }}
         />
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">{title}</h5>

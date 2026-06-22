@@ -9,7 +9,6 @@ import Flyout from '@components/Flyout';
 export const metadata: Metadata = {
   title: 'Steam Deal Search',
   description: 'Task for React course from RS School',
-  icons: { icon: '/favicon.svg' },
 };
 
 export const viewport: Viewport = {

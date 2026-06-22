@@ -5,6 +5,8 @@ import { buildMetacriticURL } from '../utils/metacritic';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
+import { THUMB_HEIGHT, THUMB_WIDTH } from '@/constant';
 
 const DealPanel = () => {
   const { dealId = '', pageNumber } =
@@ -39,9 +41,11 @@ const DealPanel = () => {
           <>
             <h5 className="card-title">{deal?.title}</h5>
             {deal?.thumb && (
-              <img
+              <Image
                 src={deal.thumb}
                 alt={deal.title}
+                width={THUMB_WIDTH}
+                height={THUMB_HEIGHT}
                 className="img-fluid rounded mb-3"
               />
             )}

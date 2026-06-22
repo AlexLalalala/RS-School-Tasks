@@ -1,4 +1,6 @@
-import { Link } from 'react-router';
+'use client';
+
+import { Link } from '@/i18n/navigation';
 import { PAGINATOR_SPREAD } from '../constant';
 
 interface PaginatorProps {
@@ -34,13 +36,17 @@ function Paginator({
     <nav aria-label="Page navigation" className={loading ? 'invisible' : ''}>
       <ul className="pagination justify-content-center">
         <li className="page-item">
-          <Link className="page-link" to={urlFactory(1)} aria-label="Previous">
+          <Link
+            className="page-link"
+            href={urlFactory(1)}
+            aria-label="Previous"
+          >
             <span aria-hidden="true">&laquo;</span>
           </Link>
         </li>
         {pageNumberArray(currentPage, PAGINATOR_SPREAD).map((n) => (
           <li className={navLinkClass(currentPage, n)} key={n}>
-            <Link className="page-link" to={urlFactory(n)}>
+            <Link className="page-link" href={urlFactory(n)}>
               {n}
             </Link>
           </li>
@@ -48,7 +54,7 @@ function Paginator({
         <li className="page-item">
           <Link
             className="page-link"
-            to={urlFactory(lastPageNumber)}
+            href={urlFactory(lastPageNumber)}
             aria-label="Next"
           >
             <span aria-hidden="true">&raquo;</span>

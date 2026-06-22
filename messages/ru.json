@@ -1,0 +1,57 @@
+{
+  "DealsList": {
+    "title": "Поисковик Скидок в Steam",
+    "tryAgainButton": "Перезагрузить"
+  },
+  "SearchBar": {
+    "searchButton": "Поиск",
+    "placeholder": "Искать..."
+  },
+  "DealsTable": {
+    "notFound": "Скидки не найдены"
+  },
+  "GameCard": {
+    "details": "Подробнее"
+  },
+  "SkeletonCard": {
+    "imageText": "Загрузка..."
+  },
+  "ErrorCard": {
+    "imageText": "Ошибка загрузки\n игры!"
+  },
+  "NavigationBar": {
+    "home": "Главная",
+    "about": "О Сайте"
+  },
+  "ThemeToggler": {
+    "darkTheme": "Темная тема",
+    "lightTheme": "Светлая тема"
+  },
+  "CacheInvalidator": {
+    "refreshButton": "Обновить"
+  },
+  "ErrorButton": {
+    "errorButton": "Выдать ошибку"
+  },
+  "DealPanel": {
+    "steamRating": "Рейтинг на Steam",
+    "priceNow": "Цена сейчас",
+    "cheapestEver": "Наименьшая цена",
+    "metacriticButton": "См. на Metacritic",
+    "noMetacritic": "Нет на Metacritic",
+    "closeButton": "Закрыть",
+    "noData": "Нет инф."
+  },
+  "NotFound": {
+    "title": "404. Страница не найдена",
+    "description": "Страница которую Вы ищите не существует",
+    "returnButton": "Вернутся на Главную страницу"
+  },
+  "AboutPage": {
+    "title": "О Сайте",
+    "createdBy": "Создан",
+    "name": "Александр Зиновьев",
+    "usesApi": "Использует API",
+    "createdFor": "Создан во время"
+  }
+}

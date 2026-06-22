@@ -1,6 +1,10 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { useTheme } from '../contexts/ThemeContext';
 
 const ThemeToggler = () => {
+  const t = useTranslations('ThemeToggler');
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -9,7 +13,7 @@ const ThemeToggler = () => {
         className="form-check-label me-2 text-secondary"
         htmlFor="theme-toggle"
       >
-        {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+        {theme === 'dark' ? t('lightTheme') : t('darkTheme')}
       </label>
       <input
         className="form-check-input m-0"

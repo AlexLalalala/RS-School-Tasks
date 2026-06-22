@@ -17,7 +17,10 @@ const toDetailedDeal = ({
     steamRatingPercent: parseInt(steamRatingPercent),
     metacriticScore: parseInt(metacriticScore),
     cheapestPrice: {
-      price: parseFloat(cheapestPrice.price),
+      price:
+        cheapestPrice.price !== undefined
+          ? parseFloat(cheapestPrice.price)
+          : null,
       date: new Date(Number(cheapestPrice.date) * 1000),
     },
     steamRatingText,
@@ -27,7 +30,7 @@ const toDetailedDeal = ({
 
 const fetchDetailedDeal = async (dealId: string): Promise<DetailedDeal> => {
   const url = new URL(CHEAPSHARK_PATH, CHEAPSHARK_BASE_URL);
-  url.searchParams.set('id', dealId);
+  url.searchParams.set('id', decodeURIComponent(dealId));
 
   const response = await fetch(url);
 

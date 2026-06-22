@@ -1,5 +1,8 @@
+'use client';
+
 import { useState } from 'react';
 import styles from './SearchBar.module.css';
+import { useTranslations } from 'next-intl';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -7,6 +10,7 @@ interface SearchBarProps {
 }
 
 function SearchBar({ onSearch, initialQuery }: SearchBarProps) {
+  const t = useTranslations('SearchBar');
   const [query, setQuery] = useState(initialQuery || '');
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +28,7 @@ function SearchBar({ onSearch, initialQuery }: SearchBarProps) {
         <input
           type="text"
           className="form-control"
-          placeholder="Search for..."
+          placeholder={t('placeholder')}
           aria-label="Search Query"
           aria-describedby="button-addon2"
           onChange={onChange}
@@ -35,7 +39,7 @@ function SearchBar({ onSearch, initialQuery }: SearchBarProps) {
           type="submit"
           id="button-addon2"
         >
-          Search
+          {t('searchButton')}
         </button>
       </div>
     </form>

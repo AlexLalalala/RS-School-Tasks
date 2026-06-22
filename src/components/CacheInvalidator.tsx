@@ -1,6 +1,10 @@
+'use client';
+
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 
 const CacheInvalidator = () => {
+  const t = useTranslations('CacheInvalidator');
   const queryClient = useQueryClient();
 
   const handleClick = () => {
@@ -11,7 +15,7 @@ const CacheInvalidator = () => {
   return (
     <div className="m-2">
       <button className="btn btn-outline-warning" onClick={handleClick}>
-        Refresh Data
+        {t('refreshButton')}
       </button>
     </div>
   );

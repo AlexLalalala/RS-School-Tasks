@@ -6,16 +6,17 @@ import reactPlugin from 'eslint-plugin-react';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import { version } from 'node:os';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'coverage', '.next']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
       reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
+      reactRefresh.configs.recommended,
       reactPlugin.configs.flat.recommended,
       reactPlugin.configs.flat['jsx-runtime'],
       eslintConfigPrettier,
@@ -25,6 +26,12 @@ export default defineConfig([
     },
     rules: {
       'no-console': 'error',
+    },
+  },
+  {
+    files: ['src/app/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
 ]);

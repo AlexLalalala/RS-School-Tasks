@@ -1,25 +1,31 @@
-import fetchGames from '../api/fetchGames';
-import SearchBar from '../components/SearchBar';
-import DealsTable from '../components/DealsTable';
-import Paginator from '../components/Paginator';
-import { Outlet, useNavigate, useParams } from 'react-router';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { useQuery } from '@tanstack/react-query';
+'use client';
 
-function HomePage() {
+import fetchGames from '@/api/fetchGames';
+import useLocalStorage from '@/hooks/useLocalStorage';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import SearchBar from './SearchBar';
+import Paginator from './Paginator';
+import DealsTable from './DealsTable';
+import type { ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
+
+function DealsList({ panel }: { panel?: ReactNode }) {
+  const t = useTranslations('DealsList');
   const [query, setQuery] = useLocalStorage('lastSearchQuery', '');
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
-  const { pageNumber, dealId } = useParams();
+  const { pageNumber = '', dealId = '' } =
+    useParams<{ pageNumber?: string; dealId?: string }>() ?? {};
   const currentPage = Number(pageNumber) || 1;
-
   const isPanelOpen = !!dealId;
 
   const handleSearch = (query: string) => {
     setQuery(query);
     if (currentPage !== 1 || dealId) {
-      navigate('/page/1');
+      router.push('/page/1');
     }
   };
 
@@ -33,7 +39,7 @@ function HomePage() {
     <>
       <div className="d-flex gap-3">
         <section className="flex-grow-1 min-width-0">
-          <h1>Steam Deals Searcher</h1>
+          <h1>{t('title')}</h1>
           <SearchBar onSearch={handleSearch} initialQuery={query} />
           {isError ? (
             <div
@@ -45,7 +51,7 @@ function HomePage() {
                 className="btn btn-sm btn-outline-danger ms-auto"
                 onClick={() => handleSearch(query)}
               >
-                Try again
+                {t('tryAgainButton')}
               </button>
             </div>
           ) : (
@@ -61,12 +67,14 @@ function HomePage() {
                 loading={isPending}
               />
               <DealsTable deals={deals} loading={isPending} />
-              <Paginator
-                currentPage={currentPage}
-                lastPageNumber={lastPageNumber}
-                basePath=""
-                loading={isPending}
-              />
+              <div className="mt-3">
+                <Paginator
+                  currentPage={currentPage}
+                  lastPageNumber={lastPageNumber}
+                  basePath=""
+                  loading={isPending}
+                />
+              </div>
             </div>
           )}
         </section>
@@ -79,7 +87,7 @@ function HomePage() {
               height: '100vh',
             }}
           >
-            <Outlet />
+            {panel}
           </section>
         )}
       </div>
@@ -87,4 +95,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default DealsList;

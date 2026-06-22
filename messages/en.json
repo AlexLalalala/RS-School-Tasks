@@ -1,0 +1,57 @@
+{
+  "DealsList": {
+    "title": "Steam Deals Searcher",
+    "tryAgainButton": "Try again"
+  },
+  "SearchBar": {
+    "searchButton": "Search",
+    "placeholder": "Search for..."
+  },
+  "DealsTable": {
+    "notFound": "No deals found."
+  },
+  "GameCard": {
+    "details": "See Details"
+  },
+  "SkeletonCard": {
+    "imageText": "Loading..."
+  },
+  "ErrorCard": {
+    "imageText": "Error Loading\n the Game!"
+  },
+  "NavigationBar": {
+    "home": "Home",
+    "about": "About"
+  },
+  "ThemeToggler": {
+    "darkTheme": "Dark Mode",
+    "lightTheme": "Light Mode"
+  },
+  "CacheInvalidator": {
+    "refreshButton": "Refresh Data"
+  },
+  "ErrorButton": {
+    "errorButton": "Throw Error"
+  },
+  "DealPanel": {
+    "steamRating": "Steam Rating",
+    "priceNow": "Price Now",
+    "cheapestEver": "Cheapest Price",
+    "metacriticButton": "See Metacritic",
+    "noMetacritic": "No Metacritic",
+    "closeButton": "Close",
+    "noData": "No data"
+  },
+  "NotFound": {
+    "title": "404. Not found",
+    "description": "Page you looking for do not exist",
+    "returnButton": "Return to Home Page"
+  },
+  "AboutPage": {
+    "title": "About Page",
+    "createdBy": "Created by",
+    "name": "Aleksandr Zinovev",
+    "usesApi": "Uses API",
+    "createdFor": "Created for"
+  }
+}

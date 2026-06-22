@@ -1,8 +1,15 @@
-import { Link, useNavigate, useParams } from 'react-router';
+'use client';
+
+import { useParams, useRouter } from 'next/navigation';
 import useDealStore from '../stores/useDealStore';
 import type { Deal } from '../types/Deal';
+import Image from 'next/image';
+import { THUMB_HEIGHT, THUMB_WIDTH } from '@/constant';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 function GameCard({ deal }: { deal: Deal }) {
+  const t = useTranslations('GameCard');
   const { title, normalPrice, salePrice, thumb, dealId } = deal;
   const { pageNumber } = useParams();
   const currentPage = Number(pageNumber) || 1;
@@ -24,9 +31,9 @@ function GameCard({ deal }: { deal: Deal }) {
     e.stopPropagation();
   };
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const handleClick = () => {
-    navigate(detailPanelUrl);
+    router.push(detailPanelUrl);
   };
 
   return (
@@ -36,11 +43,14 @@ function GameCard({ deal }: { deal: Deal }) {
         style={{ width: '18rem' }}
         onClick={handleClick}
       >
-        <img
+        <Image
           src={thumb}
+          width={THUMB_WIDTH}
+          height={THUMB_HEIGHT}
           className="card-img-top"
           alt={`Thumbnail of ${title}`}
           loading="lazy"
+          style={{ width: '100%', height: 'auto' }}
         />
         <div className="card-body d-flex flex-column">
           <h5 className="card-title">{title}</h5>
@@ -52,10 +62,10 @@ function GameCard({ deal }: { deal: Deal }) {
           </p>
           <div className="mt-auto d-flex align-items-center">
             <Link
-              to={detailPanelUrl}
+              href={detailPanelUrl}
               className="btn btn-outline-primary flex-grow-1"
             >
-              See Details
+              {t('details')}
             </Link>
             <input
               type="checkbox"

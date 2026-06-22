@@ -1,11 +1,18 @@
-import { type FunctionComponent } from 'react';
-import { Link, useParams } from 'react-router';
+'use client';
+
 import fetchDetailedDeal from '../api/fetchDetailedDeal';
 import { buildMetacriticURL } from '../utils/metacritic';
 import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import Image from 'next/image';
+import { THUMB_HEIGHT, THUMB_WIDTH } from '@/constant';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
-const DealPanel: FunctionComponent = () => {
-  const { dealId = '', pageNumber } = useParams();
+const DealPanel = () => {
+  const t = useTranslations('DealPanel');
+  const { dealId = '', pageNumber } =
+    useParams<{ dealId: string; pageNumber: string }>() ?? {};
   const currentPage = Number(pageNumber) || 1;
 
   const {
@@ -36,15 +43,17 @@ const DealPanel: FunctionComponent = () => {
           <>
             <h5 className="card-title">{deal?.title}</h5>
             {deal?.thumb && (
-              <img
+              <Image
                 src={deal.thumb}
                 alt={deal.title}
+                width={THUMB_WIDTH}
+                height={THUMB_HEIGHT}
                 className="img-fluid rounded mb-3"
               />
             )}
             <hr className="w-100" />
             <p className="text-muted mb-1">
-              Steam rating:{' '}
+              {t('steamRating')}:{' '}
               <span className="text-body">
                 {deal?.steamRatingText} ({deal?.steamRatingPercent}%)
               </span>
@@ -54,30 +63,34 @@ const DealPanel: FunctionComponent = () => {
               <span className="text-body">{deal?.metacriticScore}</span>
             </p>
             <p className="text-muted mb-1">
-              Price now:{' '}
-              <span className="text-success fw-bold">{deal?.salePrice}</span>
+              {t('priceNow')}:{' '}
+              <span className="text-success fw-bold">${deal?.salePrice}</span>
             </p>
             <p className="text-muted mb-1">
-              Cheapest ever:{' '}
-              <span className="text-body">{deal?.cheapestPrice.price}</span>
+              {t('cheapestEver')}:{' '}
+              <span className="text-body">
+                {deal?.cheapestPrice.price !== null
+                  ? `$${deal.cheapestPrice.price}`
+                  : t('noData')}
+              </span>
             </p>
             {deal?.metacriticLink ? (
               <a
                 href={buildMetacriticURL(deal?.metacriticLink)}
                 className="btn btn-outline-success"
               >
-                See Metacritic
+                {t('metacriticButton')}
               </a>
             ) : (
               <button className="btn disabled" disabled>
-                No Metacritic
+                {t('noMetacritic')}
               </button>
             )}
             <Link
-              to={`/page/${currentPage}`}
+              href={`/page/${currentPage}`}
               className="btn btn-outline-secondary mt-2"
             >
-              Close
+              {t('closeButton')}
             </Link>
           </>
         )}

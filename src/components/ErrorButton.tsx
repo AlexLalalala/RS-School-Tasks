@@ -1,8 +1,11 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 function ErrorButton() {
+  const t = useTranslations('ErrorButton');
+
   const [error, setError] = useState(false);
 
   if (error) throw new Error('Manual error!');
@@ -12,8 +15,7 @@ function ErrorButton() {
   return (
     <>
       <button className="btn btn-outline-danger" onClick={handleClick}>
-        {' '}
-        Throw Error{' '}
+        {t('errorButton')}
       </button>
     </>
   );

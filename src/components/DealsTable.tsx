@@ -4,6 +4,7 @@ import SkeletonCard from './SkeletonCard';
 import { PAGE_SIZE } from '../constant';
 import ErrorCard from './ErrorCard';
 import ErrorBoundary from './ErrorBoundary';
+import { useTranslations } from 'next-intl';
 
 interface DealsTableProps {
   deals: Deal[];
@@ -11,8 +12,9 @@ interface DealsTableProps {
 }
 
 function DealsTable({ deals, loading }: DealsTableProps) {
+  const t = useTranslations('DealsTable');
   if (!loading && deals?.length === 0) {
-    return <p>No deals found.</p>;
+    return <p>{t('notFound')}</p>;
   }
 
   return (

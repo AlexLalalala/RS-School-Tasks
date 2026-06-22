@@ -4,11 +4,13 @@ import fetchDetailedDeal from '../api/fetchDetailedDeal';
 import { buildMetacriticURL } from '../utils/metacritic';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import Link from 'next/link';
 import Image from 'next/image';
 import { THUMB_HEIGHT, THUMB_WIDTH } from '@/constant';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 const DealPanel = () => {
+  const t = useTranslations('DealPanel');
   const { dealId = '', pageNumber } =
     useParams<{ dealId: string; pageNumber: string }>() ?? {};
   const currentPage = Number(pageNumber) || 1;
@@ -51,7 +53,7 @@ const DealPanel = () => {
             )}
             <hr className="w-100" />
             <p className="text-muted mb-1">
-              Steam rating:{' '}
+              {t('steamRating')}:{' '}
               <span className="text-body">
                 {deal?.steamRatingText} ({deal?.steamRatingPercent}%)
               </span>
@@ -61,15 +63,15 @@ const DealPanel = () => {
               <span className="text-body">{deal?.metacriticScore}</span>
             </p>
             <p className="text-muted mb-1">
-              Price now:{' '}
+              {t('priceNow')}:{' '}
               <span className="text-success fw-bold">${deal?.salePrice}</span>
             </p>
             <p className="text-muted mb-1">
-              Cheapest ever:{' '}
+              {t('cheapestEver')}:{' '}
               <span className="text-body">
                 {deal?.cheapestPrice.price !== null
                   ? `$${deal.cheapestPrice.price}`
-                  : 'No data'}
+                  : t('noData')}
               </span>
             </p>
             {deal?.metacriticLink ? (
@@ -77,18 +79,18 @@ const DealPanel = () => {
                 href={buildMetacriticURL(deal?.metacriticLink)}
                 className="btn btn-outline-success"
               >
-                See Metacritic
+                {t('metacriticButton')}
               </a>
             ) : (
               <button className="btn disabled" disabled>
-                No Metacritic
+                {t('noMetacritic')}
               </button>
             )}
             <Link
               href={`/page/${currentPage}`}
               className="btn btn-outline-secondary mt-2"
             >
-              Close
+              {t('closeButton')}
             </Link>
           </>
         )}

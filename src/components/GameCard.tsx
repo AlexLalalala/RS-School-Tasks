@@ -3,11 +3,13 @@
 import { useParams, useRouter } from 'next/navigation';
 import useDealStore from '../stores/useDealStore';
 import type { Deal } from '../types/Deal';
-import Link from 'next/link';
 import Image from 'next/image';
 import { THUMB_HEIGHT, THUMB_WIDTH } from '@/constant';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 function GameCard({ deal }: { deal: Deal }) {
+  const t = useTranslations('GameCard');
   const { title, normalPrice, salePrice, thumb, dealId } = deal;
   const { pageNumber } = useParams();
   const currentPage = Number(pageNumber) || 1;
@@ -63,7 +65,7 @@ function GameCard({ deal }: { deal: Deal }) {
               href={detailPanelUrl}
               className="btn btn-outline-primary flex-grow-1"
             >
-              See Details
+              {t('details')}
             </Link>
             <input
               type="checkbox"

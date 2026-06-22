@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation';
 import SearchBar from './SearchBar';
 import Paginator from './Paginator';
 import DealsTable from './DealsTable';
-import FormController from './FormController';
 import type { ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 
 function DealsList({ panel }: { panel?: ReactNode }) {
+  const t = useTranslations('DealsList');
   const [query, setQuery] = useLocalStorage('lastSearchQuery', '');
 
   const router = useRouter();
@@ -38,7 +39,7 @@ function DealsList({ panel }: { panel?: ReactNode }) {
     <>
       <div className="d-flex gap-3">
         <section className="flex-grow-1 min-width-0">
-          <h1>Steam Deals Searcher</h1>
+          <h1>{t('title')}</h1>
           <SearchBar onSearch={handleSearch} initialQuery={query} />
           {isError ? (
             <div
@@ -50,7 +51,7 @@ function DealsList({ panel }: { panel?: ReactNode }) {
                 className="btn btn-sm btn-outline-danger ms-auto"
                 onClick={() => handleSearch(query)}
               >
-                Try again
+                {t('tryAgainButton')}
               </button>
             </div>
           ) : (
@@ -74,7 +75,6 @@ function DealsList({ panel }: { panel?: ReactNode }) {
                   loading={isPending}
                 />
               </div>
-              <FormController />
             </div>
           )}
         </section>

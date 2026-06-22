@@ -5,9 +5,12 @@ import ErrorButton from './ErrorButton';
 import ThemeToggler from './ThemeToggler';
 import CacheInvalidator from './CacheInvalidator';
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
+import { LocaleSwitcher } from './LocaleSwitcher';
 
 const NavigationBar: FunctionComponent = () => {
+  const t = useTranslations('NavigationBar');
   const pathname = usePathname();
 
   const navLinkClass = (href: string) =>
@@ -17,17 +20,18 @@ const NavigationBar: FunctionComponent = () => {
       <ul className="navbar-nav">
         <li className="nav-item">
           <Link className={navLinkClass('/')} href="/">
-            Home
+            {t('home')}
           </Link>
         </li>
         <li className="nav-item">
           <Link className={navLinkClass('/about')} href="/about">
-            About
+            {t('about')}
           </Link>
         </li>
       </ul>
       <div className="ms-auto d-flex align-items-center">
         <ThemeToggler />
+        <LocaleSwitcher />
         <CacheInvalidator />
         <ErrorButton />
       </div>

@@ -2,14 +2,17 @@ import { useState } from 'react';
 
 function useLocalStorage<T>(key: string, init: T) {
   const [value, setValue] = useState<T>(() => {
-    const stored = localStorage.getItem(key);
-    if (stored === null) return init;
+    if (typeof window === 'undefined') return init
+    const stored = localStorage.getItem(key)
+    if (stored === null) return init
     try {
-      return JSON.parse(stored);
+      return JSON.parse(stored)
     } catch {
-      return init;
+      return init
     }
-  });
+
+}
+)
 
   function setStoredValue(newValue: T) {
     setValue(newValue);

@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState } from 'react';
 import Modal from './Modal';
 

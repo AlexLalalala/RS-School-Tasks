@@ -1,11 +1,14 @@
-import { type FunctionComponent } from 'react';
-import { Link, useParams } from 'react-router';
+'use client';
+
 import fetchDetailedDeal from '../api/fetchDetailedDeal';
 import { buildMetacriticURL } from '../utils/metacritic';
 import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
-const DealPanel: FunctionComponent = () => {
-  const { dealId = '', pageNumber } = useParams();
+const DealPanel = () => {
+  const { dealId = '', pageNumber } =
+    useParams<{ dealId: string; pageNumber: string }>() ?? {};
   const currentPage = Number(pageNumber) || 1;
 
   const {
@@ -55,11 +58,15 @@ const DealPanel: FunctionComponent = () => {
             </p>
             <p className="text-muted mb-1">
               Price now:{' '}
-              <span className="text-success fw-bold">{deal?.salePrice}</span>
+              <span className="text-success fw-bold">${deal?.salePrice}</span>
             </p>
             <p className="text-muted mb-1">
               Cheapest ever:{' '}
-              <span className="text-body">{deal?.cheapestPrice.price}</span>
+              <span className="text-body">
+                {deal?.cheapestPrice.price !== null
+                  ? `$${deal.cheapestPrice.price}`
+                  : 'No data'}
+              </span>
             </p>
             {deal?.metacriticLink ? (
               <a
@@ -74,7 +81,7 @@ const DealPanel: FunctionComponent = () => {
               </button>
             )}
             <Link
-              to={`/page/${currentPage}`}
+              href={`/page/${currentPage}`}
               className="btn btn-outline-secondary mt-2"
             >
               Close

@@ -1,3 +1,5 @@
+'use client';
+
 import useDealStore from '../stores/useDealStore';
 import { downloadCsv, generateCsv } from '../utils/csv';
 

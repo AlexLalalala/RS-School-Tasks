@@ -1,8 +1,20 @@
-import type { Metadata } from 'next';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import '@/index.css';
+import type { Metadata, Viewport } from 'next';
+import Providers from '@/Providers';
+import NavigationBar from '@components/NavigationBar';
+import Flyout from '@components/Flyout';
 
 export const metadata: Metadata = {
-  title: 'NextJS',
+  title: 'Steam Deal Search',
   description: 'Task for React course from RS School',
+  icons: { icon: '/favicon.svg' },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -12,13 +24,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Steam Deal Search</title>
-      </head>
       <body>
-        <div id="root">{children}</div>
+        <div id="root">
+          <Providers>
+            <NavigationBar />
+            {children}
+            <Flyout />
+          </Providers>
+        </div>
       </body>
     </html>
   );

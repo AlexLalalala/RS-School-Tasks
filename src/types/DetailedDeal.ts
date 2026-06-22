@@ -18,5 +18,5 @@ export interface DetailedDeal extends Deal {
   steamRatingPercent: number;
   steamRatingText: string;
   metacriticScore: number;
-  cheapestPrice: { price: number; date: Date };
+  cheapestPrice: { price: number | null; date: Date };
 }

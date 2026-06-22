@@ -1,6 +1,9 @@
-import { Link, useNavigate, useParams } from 'react-router';
+'use client';
+
+import { useParams, useRouter } from 'next/navigation';
 import useDealStore from '../stores/useDealStore';
 import type { Deal } from '../types/Deal';
+import Link from 'next/link';
 
 function GameCard({ deal }: { deal: Deal }) {
   const { title, normalPrice, salePrice, thumb, dealId } = deal;
@@ -24,9 +27,9 @@ function GameCard({ deal }: { deal: Deal }) {
     e.stopPropagation();
   };
 
-  const navigate = useNavigate();
+  const router = useRouter();
   const handleClick = () => {
-    navigate(detailPanelUrl);
+    router.push(detailPanelUrl);
   };
 
   return (
@@ -52,7 +55,7 @@ function GameCard({ deal }: { deal: Deal }) {
           </p>
           <div className="mt-auto d-flex align-items-center">
             <Link
-              to={detailPanelUrl}
+              href={detailPanelUrl}
               className="btn btn-outline-primary flex-grow-1"
             >
               See Details

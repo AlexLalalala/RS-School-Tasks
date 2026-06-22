@@ -1,6 +1,4 @@
-import type { FunctionComponent } from 'react';
-
-const AboutPage: FunctionComponent = () => {
+export default function AboutPage() {
   return (
     <>
       <h5 className="mt-5">About Page</h5>
@@ -17,6 +15,4 @@ const AboutPage: FunctionComponent = () => {
       </p>
     </>
   );
-};
-
-export default AboutPage;
+}

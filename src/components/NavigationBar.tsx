@@ -1,24 +1,29 @@
+'use client';
+
 import type { FunctionComponent } from 'react';
-import { NavLink, type NavLinkRenderProps } from 'react-router';
 import ErrorButton from './ErrorButton';
 import ThemeToggler from './ThemeToggler';
 import CacheInvalidator from './CacheInvalidator';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 const NavigationBar: FunctionComponent = () => {
-  const navLinkClass = ({ isActive }: NavLinkRenderProps) =>
-    `nav-link ${isActive ? 'active' : ''}`;
+  const pathname = usePathname();
+
+  const navLinkClass = (href: string) =>
+    `nav-link ${pathname?.startsWith(href) ? 'active' : ''}`;
   return (
     <nav className="navbar navbar-expand px-3 rounded bg-body-tertiary border">
       <ul className="navbar-nav">
         <li className="nav-item">
-          <NavLink className={navLinkClass} to="/">
+          <Link className={navLinkClass('/')} href="/">
             Home
-          </NavLink>
+          </Link>
         </li>
         <li className="nav-item">
-          <NavLink className={navLinkClass} to="/about">
+          <Link className={navLinkClass('/about')} href="/about">
             About
-          </NavLink>
+          </Link>
         </li>
       </ul>
       <div className="ms-auto d-flex align-items-center">
